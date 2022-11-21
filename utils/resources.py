@@ -19,6 +19,7 @@ import os
 import pygame
 #from pygame.compat import geterror
 from pygame.constants import RLEACCEL
+from utils.parameters import WIDTH_UNIT
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, 'data')
@@ -51,3 +52,21 @@ def load_sound(name):
         #raise SystemExit(str(geterror()))
     return sound
 
+def load_font(name, size=2 * WIDTH_UNIT):
+    """
+    Load font with pygame font
+
+    Parameters:
+    name (string): file name
+    """
+    if not pygame.font.get_init():
+        pygame.font.init()
+
+    full_name = os.path.join(data_dir, "font", name)
+    try:
+        font = pygame.font.Font(full_name, size)
+    except pygame.error:
+        print("Cannot load font: %s" % full_name)
+        error_message = pygame.get_error()
+        raise SystemExit(error_message) from pygame.error
+    return font

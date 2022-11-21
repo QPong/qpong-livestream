@@ -14,47 +14,100 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from copy import deepcopy
+
 import pygame
-from qiskit import BasicAer, execute
+
+from qiskit import BasicAer, execute, ClassicalRegister
+
 from utils.colors import WHITE, BLACK
-from utils.fonts import ARIAL_30
+from utils.parameters import WIDTH_UNIT, SCREEN_HEIGHT
 from utils.states import comp_basis_states
+from utils.font import Font
 
 
 class StatevectorGrid(pygame.sprite.Sprite):
-    """Displays a statevector grid"""
-    def __init__(self, circuit):
+    """
+    Displays a statevector grid
+    """
+    def __init__(self, circuit, qubit_num, num_shots):
         pygame.sprite.Sprite.__init__(self)
         self.image = None
         self.rect = None
+        self.font = Font()
+        self.block_size = int(round(SCREEN_HEIGHT / 2**qubit_num))
         self.basis_states = comp_basis_states(circuit.width())
-        self.set_circuit(circuit)
+        self.circuit = circuit
 
-    # def update(self):
-    #     # Nothing yet
-    #     a = 1
+        self.paddle = pygame.Surface([WIDTH_UNIT, self.block_size])
+        self.paddle.fill(WHITE)
+        self.paddle.convert()
 
-    def set_circuit(self, circuit):
-        backend_sv_sim = BasicAer.get_backend('statevector_simulator')
-        job_sim = execute(circuit, backend_sv_sim)
+        self.paddle_before_measurement(circuit, qubit_num, num_shots)
+
+    def display_statevector(self, qubit_num):
+        """
+        Draw computational basis for a statevector of a specified
+        number of qubits
+        """
+        for qb_idx in range(2**qubit_num):
+            text = self.font.vector_font.render(
+                "|" + self.basis_states[qb_idx] + ">", 1, WHITE
+            )
+            text_height = text.get_height()
+            y_offset = self.block_size * 0.5 - text_height * 0.5
+            self.image.blit(text, (2 * WIDTH_UNIT, qb_idx * self.block_size + y_offset))
+
+    def paddle_before_measurement(self, circuit, qubit_num, shot_num):
+        """
+        Get statevector from circuit, and set the
+        paddle(s) alpha values according to basis
+        state(s) probabilitie(s)
+        """
+        self.update()
+        self.display_statevector(qubit_num)
+
+        backend_sv_sim = BasicAer.get_backend("statevector_simulator")
+        job_sim = execute(circuit, backend_sv_sim, shots=shot_num)
         result_sim = job_sim.result()
-
         quantum_state = result_sim.get_statevector(circuit, decimals=3)
 
-        self.image = pygame.Surface([(circuit.width() + 1) * 50, 100 + len(quantum_state) * 50])
-        self.image.convert()
-        self.image.fill(WHITE)
-        self.rect = self.image.get_rect()
+        for basis_state, ampl in enumerate(quantum_state):
+            self.paddle.set_alpha(int(round(abs(ampl) ** 2 * 255)))
+            self.image.blit(self.paddle, (0, basis_state * self.block_size))
 
-        block_size = 50
-        x_offset = 50
-        y_offset = 50
-        for y in range(len(quantum_state)):
-            text_surface = ARIAL_30.render(self.basis_states[y], False, (0, 0, 0))
-            self.image.blit(text_surface,(x_offset, (y + 1) * block_size + y_offset))
-            rect = pygame.Rect(x_offset + circuit.width() * 20,
-                               (y + 1) * block_size + y_offset,
-                               abs(quantum_state[y]) * block_size,
-                               abs(quantum_state[y]) * block_size)
-            if abs(quantum_state[y]) > 0:
-                pygame.draw.rect(self.image, BLACK, rect, 1)
+    def paddle_after_measurement(self, circuit, qubit_num, shot_num):
+        """
+        Measure all qubits on circuit
+        """
+        self.update()
+        self.display_statevector(qubit_num)
+
+        backend_sv_sim = BasicAer.get_backend("qasm_simulator")
+        creg = ClassicalRegister(qubit_num)
+        measure_circuit = deepcopy(circuit)  # make a copy of circuit
+        measure_circuit.add_register(
+            creg
+        )  # add classical registers for measurement readout
+        measure_circuit.measure(measure_circuit.qregs[0], measure_circuit.cregs[0])
+        job_sim = execute(measure_circuit, backend_sv_sim, shots=shot_num)
+        result_sim = job_sim.result()
+        counts = result_sim.get_counts(circuit)
+
+        self.paddle.set_alpha(255)
+        self.image.blit(
+            self.paddle, (0, int(list(counts.keys())[0], 2) * self.block_size)
+        )
+
+        return int(list(counts.keys())[0], 2)
+
+    def update(self):
+        """
+        Update statevector grid
+        """
+        self.image = pygame.Surface(
+            [(self.circuit.width() + 1) * 3 * WIDTH_UNIT, SCREEN_HEIGHT]
+        )
+        self.image.convert()
+        self.image.fill(BLACK)
+        self.rect = self.image.get_rect()
