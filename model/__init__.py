@@ -14,5 +14,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from .circuit_grid_model import CircuitGridModel
+from .circuit_grid_model import CircuitGridModel, CircuitGridNode
 from .circuit_node_types import *
