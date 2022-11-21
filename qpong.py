@@ -15,17 +15,16 @@ def main():
     pygame.display.set_caption('QPong')
     exit = False
     
+    # initialize circuit grid
     circuit_grid_model = CircuitGridModel(3, 16)
     circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.IDEN))
-
     circuit_grid = CircuitGrid(5, WINDOW_HEIGHT*0.7, circuit_grid_model)
     circuit_grid.draw(screen)
 
+    # initialize statevector grid
     circuit = circuit_grid_model.compute_circuit()
     statevector_grid = StatevectorGrid(circuit, 3, 100)
-    right_statevector = VBox(
-            WIDTH_UNIT * 90, WIDTH_UNIT * 0, statevector_grid
-        )
+    right_statevector = VBox(WIDTH_UNIT*90, WIDTH_UNIT*0, statevector_grid)
     right_statevector.draw(screen)
 
     while not exit:
