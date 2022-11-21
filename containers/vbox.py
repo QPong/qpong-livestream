@@ -19,10 +19,11 @@ import pygame
 
 class VBox(pygame.sprite.RenderPlain):
     """Arranges sprites vertically"""
-    def __init__(self, xpos, ypos, *sprites):
+    def __init__(self, xpos, ypos, screen, *sprites):
         pygame.sprite.RenderPlain.__init__(self, sprites)
         self.xpos = xpos
         self.ypos = ypos
+        self.screen = screen
         self.arrange()
 
     def arrange(self):
@@ -33,3 +34,6 @@ class VBox(pygame.sprite.RenderPlain):
             sprite.rect.left = next_xpos
             sprite.rect.top = next_ypos
             next_ypos += sprite.rect.height
+    
+    def draw(self):
+        super().draw(self.screen)

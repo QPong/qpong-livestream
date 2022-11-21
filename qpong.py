@@ -25,8 +25,8 @@ def main():
     # initialize statevector grid
     circuit = circuit_grid_model.compute_circuit()
     statevector_grid = StatevectorGrid(circuit, 3, 100)
-    right_statevector = VBox(WIDTH_UNIT*90, WIDTH_UNIT*0, statevector_grid)
-    right_statevector.draw(screen)
+    right_statevector = VBox(WIDTH_UNIT*90, WIDTH_UNIT*0, screen, statevector_grid)
+    right_statevector.draw()
 
     # initialize input
     input = Input(circuit_grid)
