@@ -17,7 +17,7 @@
 import os
 
 import pygame
-from pygame.compat import geterror
+#from pygame.compat import geterror
 from pygame.constants import RLEACCEL
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
@@ -29,7 +29,7 @@ def load_image(name, colorkey=None):
         image = pygame.image.load(fullname)
     except pygame.error:
         print ('Cannot load image:', fullname)
-        raise SystemExit(str(geterror()))
+        #raise SystemExit(str(geterror()))
     image = image.convert()
     if colorkey is not None:
         if colorkey is -1:
@@ -48,6 +48,6 @@ def load_sound(name):
         sound = pygame.mixer.Sound(fullname)
     except pygame.error:
         print ('Cannot load sound: %s' % fullname)
-        raise SystemExit(str(geterror()))
+        #raise SystemExit(str(geterror()))
     return sound
 
