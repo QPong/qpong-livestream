@@ -1,6 +1,7 @@
 import pygame
 
 from utils.parameters import WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT
+from utils.input import Input
 from model import CircuitGridModel, CircuitGridNode
 from model import circuit_node_types as node_types
 from controls import CircuitGrid
@@ -27,10 +28,11 @@ def main():
     right_statevector = VBox(WIDTH_UNIT*90, WIDTH_UNIT*0, statevector_grid)
     right_statevector.draw(screen)
 
-    while not exit:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                exit = True
+    # initialize input
+    input = Input(screen, circuit_grid)
+
+    while not input.exit:
+        input.handle_input()
         pygame.display.update()
 
 if __name__ == '__main__':

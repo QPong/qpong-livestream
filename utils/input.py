@@ -22,8 +22,7 @@ import numpy as np
 
 import pygame
 
-from qpong.utils import gamepad
-from qpong.utils.navigation import MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
+from utils.navigation import MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
 
 
 class Input:
@@ -31,230 +30,100 @@ class Input:
     Handle input events
     """
 
-    def __init__(self):
-        self.running = True
+    def __init__(self, screen, circuit_grid):
+        self.exit = False
+        self.screen = screen
+        self.circuit_grid = circuit_grid
 
-        if not pygame.joystick.get_init():
-            pygame.joystick.init()
-
-        self.num_joysticks = pygame.joystick.get_count()
-        if self.num_joysticks > 0:
-            self.joystick = pygame.joystick.Joystick(0)
-            if not self.joystick.get_init():
-                self.joystick.init()
-
-        self.gamepad_repeat_delay = 200
-        self.gamepad_neutral = True
-        self.gamepad_pressed_timer = 0
-        self.gamepad_last_update = pygame.time.get_ticks()
-
-    def handle_input(self, level, screen, scene):
+    def handle_input(self):
         # pylint: disable=too-many-branches disable=too-many-statements
         """
         Handle quantum player input
         """
-
-        gamepad_move = False
-        circuit_grid = level.circuit_grid
-
-        # use joystick if it's connected
-        if self.num_joysticks > 0:
-            joystick_hat = self.joystick.get_hat(0)
-
-            if joystick_hat == (0, 0):
-                self.gamepad_neutral = True
-                self.gamepad_pressed_timer = 0
-            else:
-                if self.gamepad_neutral:
-                    gamepad_move = True
-                    self.gamepad_neutral = False
-                else:
-                    self.gamepad_pressed_timer += (
-                        pygame.time.get_ticks() - self.gamepad_last_update
-                    )
-            if self.gamepad_pressed_timer > self.gamepad_repeat_delay:
-                gamepad_move = True
-                self.gamepad_pressed_timer -= self.gamepad_repeat_delay
-            if gamepad_move:
-                if joystick_hat == (-1, 0):
-                    self.move_update_circuit_grid_display(
-                        screen, circuit_grid, MOVE_LEFT
-                    )
-                elif joystick_hat == (1, 0):
-                    self.move_update_circuit_grid_display(
-                        screen, circuit_grid, MOVE_RIGHT
-                    )
-                elif joystick_hat == (0, 1):
-                    self.move_update_circuit_grid_display(screen, circuit_grid, MOVE_UP)
-                elif joystick_hat == (0, -1):
-                    self.move_update_circuit_grid_display(
-                        screen, circuit_grid, MOVE_DOWN
-                    )
-            self.gamepad_last_update = pygame.time.get_ticks()
-
-            # Check left thumbstick position
-            # left_thumb_x = self.joystick.get_axis(0)
-            # left_thumb_y = self.joystick.get_axis(1)
 
         # Handle Input Events
         for event in pygame.event.get():
             pygame.event.pump()
 
             if event.type == pygame.QUIT:
-                self.running = False
-            elif event.type == pygame.JOYBUTTONDOWN:
-                if event.button == gamepad.BTN_A:
-                    # Place X gate
-                    circuit_grid.handle_input_x()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                elif event.button == gamepad.BTN_X:
-                    # Place Y gate
-                    circuit_grid.handle_input_y()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                elif event.button == gamepad.BTN_B:
-                    # Place Z gate
-                    circuit_grid.handle_input_z()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                elif event.button == gamepad.BTN_Y:
-                    # Place Hadamard gate
-                    circuit_grid.handle_input_h()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                elif event.button == gamepad.BTN_RIGHT_TRIGGER:
-                    # Delete gate
-                    circuit_grid.handle_input_delete()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                elif event.button == gamepad.BTN_RIGHT_THUMB:
-                    # Add or remove a control
-                    circuit_grid.handle_input_ctrl()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                elif event.button == gamepad.BTN_LEFT_BUMPER:
-                    # Update visualizations
-                    self.update_paddle(level, screen, scene)
-
-            elif event.type == pygame.JOYAXISMOTION:
-                # print("event: ", event)
-                if (
-                    event.axis == gamepad.AXIS_RIGHT_THUMB_X
-                    and self.joystick.get_axis(gamepad.AXIS_RIGHT_THUMB_X) >= 0.95
-                ):
-                    circuit_grid.handle_input_rotate(np.pi / 8)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                if (
-                    event.axis == gamepad.AXIS_RIGHT_THUMB_X
-                    and self.joystick.get_axis(gamepad.AXIS_RIGHT_THUMB_X) <= -0.95
-                ):
-                    circuit_grid.handle_input_rotate(-np.pi / 8)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                if (
-                    event.axis == gamepad.AXIS_RIGHT_THUMB_Y
-                    and self.joystick.get_axis(gamepad.AXIS_RIGHT_THUMB_Y) <= -0.95
-                ):
-                    circuit_grid.handle_input_move_ctrl(MOVE_UP)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-                if (
-                    event.axis == gamepad.AXIS_RIGHT_THUMB_Y
-                    and self.joystick.get_axis(gamepad.AXIS_RIGHT_THUMB_Y) >= 0.95
-                ):
-                    circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
-                    pygame.display.flip()
-
+                self.exit = True
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.running = False
+                    self.exit = True
                 elif event.key == pygame.K_a:
-                    circuit_grid.move_to_adjacent_node(MOVE_LEFT)
-                    circuit_grid.draw(screen)
+                    self.circuit_grid.move_to_adjacent_node(MOVE_LEFT)
+                    self.circuit_grid.draw(self.screen)
                     pygame.display.flip()
                 elif event.key == pygame.K_d:
-                    circuit_grid.move_to_adjacent_node(MOVE_RIGHT)
-                    circuit_grid.draw(screen)
+                    self.circuit_grid.move_to_adjacent_node(MOVE_RIGHT)
+                    self.circuit_grid.draw(self.screen)
                     pygame.display.flip()
                 elif event.key == pygame.K_w:
-                    circuit_grid.move_to_adjacent_node(MOVE_UP)
-                    circuit_grid.draw(screen)
+                    self.circuit_grid.move_to_adjacent_node(MOVE_UP)
+                    self.circuit_grid.draw(self.screen)
                     pygame.display.flip()
                 elif event.key == pygame.K_s:
-                    circuit_grid.move_to_adjacent_node(MOVE_DOWN)
-                    circuit_grid.draw(screen)
+                    self.circuit_grid.move_to_adjacent_node(MOVE_DOWN)
+                    self.circuit_grid.draw(self.screen)
                     pygame.display.flip()
                 elif event.key == pygame.K_x:
-                    circuit_grid.handle_input_x()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_x()
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_y:
-                    circuit_grid.handle_input_y()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_y()
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_z:
-                    circuit_grid.handle_input_z()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_z()
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_h:
-                    circuit_grid.handle_input_h()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_h()
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_SPACE:
-                    circuit_grid.handle_input_delete()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_delete()
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_c:
                     # Add or remove a control
-                    circuit_grid.handle_input_ctrl()
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_ctrl()
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_UP:
                     # Move a control qubit up
-                    circuit_grid.handle_input_move_ctrl(MOVE_UP)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_move_ctrl(MOVE_UP)
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_DOWN:
                     # Move a control qubit down
-                    circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_LEFT:
                     # Rotate a gate
-                    circuit_grid.handle_input_rotate(-np.pi / 8)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_rotate(-np.pi / 8)
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
                 elif event.key == pygame.K_RIGHT:
                     # Rotate a gate
-                    circuit_grid.handle_input_rotate(np.pi / 8)
-                    circuit_grid.draw(screen)
-                    self.update_paddle(level, screen, scene)
+                    self.circuit_grid.handle_input_rotate(np.pi / 8)
+                    self.circuit_grid.draw(self.screen)
+                    #self.update_paddle(level, screen, scene)
                     pygame.display.flip()
-                elif event.key == pygame.K_TAB:
+                #elif event.key == pygame.K_TAB:
                     # Update visualizations
-                    self.update_paddle(level, screen, scene)
+                    #self.update_paddle(level, screen, scene)
 
     @staticmethod
     def update_paddle(level, screen, scene):
