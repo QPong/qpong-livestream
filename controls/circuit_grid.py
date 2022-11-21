@@ -33,7 +33,7 @@ LINE_WIDTH = 1
 
 class CircuitGrid(pygame.sprite.RenderPlain):
     """Enables interaction with circuit"""
-    def __init__(self, xpos, ypos, circuit_grid_model):
+    def __init__(self, xpos, ypos, circuit_grid_model, screen):
         self.xpos = xpos
         self.ypos = ypos
         self.circuit_grid_model = circuit_grid_model
@@ -41,6 +41,7 @@ class CircuitGrid(pygame.sprite.RenderPlain):
         self.selected_column = 0
         self.circuit_grid_background = CircuitGridBackground(circuit_grid_model)
         self.circuit_grid_cursor = CircuitGridCursor()
+        self.screen = screen
         self.gate_tiles = np.empty((circuit_grid_model.max_wires,
                                     circuit_grid_model.max_columns),
                                 dtype = CircuitGridGate)
@@ -54,6 +55,9 @@ class CircuitGrid(pygame.sprite.RenderPlain):
                                            self.gate_tiles,
                                            self.circuit_grid_cursor)
         self.update()
+
+    def draw(self):
+        super().draw(self.screen)
 
     def update(self, *args):
         print("in CircuitGrid#update()")

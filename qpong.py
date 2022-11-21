@@ -19,8 +19,8 @@ def main():
     # initialize circuit grid
     circuit_grid_model = CircuitGridModel(3, 16)
     circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.IDEN))
-    circuit_grid = CircuitGrid(5, WINDOW_HEIGHT*0.7, circuit_grid_model)
-    circuit_grid.draw(screen)
+    circuit_grid = CircuitGrid(5, WINDOW_HEIGHT*0.7, circuit_grid_model, screen)
+    circuit_grid.draw()
 
     # initialize statevector grid
     circuit = circuit_grid_model.compute_circuit()
@@ -29,7 +29,7 @@ def main():
     right_statevector.draw(screen)
 
     # initialize input
-    input = Input(screen, circuit_grid)
+    input = Input(circuit_grid)
 
     while not input.exit:
         input.handle_input()
