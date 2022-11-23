@@ -41,11 +41,6 @@ class Ball(pygame.sprite.Sprite):
         self.rect.centerx += self.velocity[0]
         self.rect.centery += self.velocity[1]
 
-        if self.rect.centery <= self.top_edge:
-            self.velocity[1] = -self.velocity[1]
-        if self.rect.centery > self.bottom_edge - 1 * self.height:
-            self.velocity[1] = -self.velocity[1]
-
     def bounce(self):
         self.velocity[0] = -self.velocity[0]
         self.velocity[1] = random.randint(-2,2)

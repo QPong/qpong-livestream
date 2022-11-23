@@ -58,6 +58,18 @@ def main():
 
         input.handle_input()
         ball.update()
+
+        if ball.rect.centerx <= 0:
+            classical_computer_right.score+=1
+            ball.reset()
+        if ball.rect.centerx >= WINDOW_WIDTH:
+            classical_computer_left.score+=1
+            ball.reset()
+        if ball.rect.centery <= ball.top_edge:
+            ball.velocity[1] = -ball.velocity[1]
+        if ball.rect.centery > ball.bottom_edge - 1 * ball.height:
+            ball.velocity[1] = -ball.velocity[1]
+
         classical_computer_left.update(ball)
         classical_computer_right.update(ball)
         
