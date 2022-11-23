@@ -2,12 +2,14 @@ import random
 
 import pygame
 
-from utils.parameters import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT
+from utils.parameters import (
+    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT, NUM_QUBITS, SCREEN_HEIGHT,
+    LEFT_EDGE, RIGHT_EDGE
+)
 from utils.colors import BLACK
-from utils.input import Input
 from utils.ball import Ball
 from utils.paddle import Paddle
-from utils.player import ClassicalComputer
+from utils.player import ClassicalComputer, QuantumComputer
 from utils.hud import draw_score
 from model import CircuitGridModel, CircuitGridNode
 from model import circuit_node_types as node_types
@@ -30,20 +32,17 @@ def main():
     circuit_grid.draw()
 
     # initialize statevector grid
-    statevector_grid = StatevectorGrid(circuit_grid_model, 3, 100)
+    statevector_grid = StatevectorGrid(circuit_grid_model)
     right_statevector = VBox(WIDTH_UNIT*90, WIDTH_UNIT*0, screen, statevector_grid)
     right_statevector.draw()
-
-    # initialize input
-    input = Input(circuit_grid, statevector_grid, right_statevector)
 
     # pong
     left_paddle = Paddle()
     left_paddle.rect.x = 9 * WIDTH_UNIT
-    classical_computer_left = ClassicalComputer(left_paddle)
+    classical_computer = ClassicalComputer(left_paddle)
     right_paddle = Paddle()
     right_paddle.rect.x = WINDOW_WIDTH - 9 * WIDTH_UNIT
-    classical_computer_right = ClassicalComputer(right_paddle)
+    quantum_computer = QuantumComputer(right_paddle, circuit_grid, statevector_grid, right_statevector)
     ball = Ball(screen)
 
     moving_sprites = pygame.sprite.Group()
@@ -53,32 +52,39 @@ def main():
     
     clock = pygame.time.Clock()
 
-    while not input.exit:
+    while not quantum_computer.exit:
         screen.fill(BLACK)
 
-        input.handle_input()
         ball.update()
 
-        if ball.rect.centerx <= 0:
-            classical_computer_right.score+=1
+        if ball.rect.centerx <=0:
+            quantum_computer.score+=1
             ball.reset()
         if ball.rect.centerx >= WINDOW_WIDTH:
-            classical_computer_left.score+=1
+            classical_computer.score+=1
             ball.reset()
         if ball.rect.centery <= ball.top_edge:
             ball.velocity[1] = -ball.velocity[1]
         if ball.rect.centery > ball.bottom_edge - 1 * ball.height:
             ball.velocity[1] = -ball.velocity[1]
 
-        classical_computer_left.update(ball)
-        classical_computer_right.update(ball)
+        classical_computer.update(ball)
+        quantum_computer.handle_input()
+
+        # trigger measurement
+        if RIGHT_EDGE - 12 * WIDTH_UNIT < ball.rect.centerx < RIGHT_EDGE - 10 * WIDTH_UNIT:
+            circuit = circuit_grid_model.compute_circuit()
+            pos = statevector_grid.paddle_after_measurement()
+            right_statevector.arrange()
+
+            # paddle after measurement
+            right_paddle.rect.y = pos * SCREEN_HEIGHT / (2**NUM_QUBITS)
         
-        moving_sprites.update()
-        if pygame.sprite.collide_mask(ball, left_paddle) or\
+        if pygame.sprite.collide_mask(ball, left_paddle) or \
             pygame.sprite.collide_mask(ball, right_paddle):
             ball.bounce()
         
-        draw_score(classical_computer_left.score, classical_computer_right.score, screen)
+        draw_score(classical_computer.score, quantum_computer.score, screen)
         circuit_grid.draw()
         right_statevector.draw()
         moving_sprites.draw(screen)

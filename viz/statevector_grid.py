@@ -21,7 +21,7 @@ import pygame
 from qiskit import BasicAer, execute, ClassicalRegister
 
 from utils.colors import WHITE, BLACK
-from utils.parameters import WIDTH_UNIT, SCREEN_HEIGHT
+from utils.parameters import WIDTH_UNIT, SCREEN_HEIGHT, NUM_QUBITS
 from utils.states import comp_basis_states
 from utils.font import Font
 
@@ -30,11 +30,11 @@ class StatevectorGrid(pygame.sprite.Sprite):
     """
     Displays a statevector grid
     """
-    def __init__(self, circuit_grid_model, num_qubits=3, num_shots=100):
+    def __init__(self, circuit_grid_model, num_shots=100):
         pygame.sprite.Sprite.__init__(self)
 
         self.circuit_grid_model = circuit_grid_model
-        self.num_qubits = num_qubits
+        self.num_qubits = NUM_QUBITS
         self.num_shots = num_shots
 
         self.image = None
@@ -90,14 +90,14 @@ class StatevectorGrid(pygame.sprite.Sprite):
 
         ## TODO refactor this part to use the best syntax
         backend_sv_sim = BasicAer.get_backend("qasm_simulator")
-        creg = ClassicalRegister(self.qubit_num)
+        creg = ClassicalRegister(NUM_QUBITS)
         circuit = self.circuit_grid_model.compute_circuit()
         measure_circuit = deepcopy(circuit)  # make a copy of circuit
         measure_circuit.add_register(
             creg
         )  # add classical registers for measurement readout
         measure_circuit.measure(measure_circuit.qregs[0], measure_circuit.cregs[0])
-        job_sim = execute(measure_circuit, backend_sv_sim, shots=self.shot_num)
+        job_sim = execute(measure_circuit, backend_sv_sim, shots=self.num_shots)
         result_sim = job_sim.result()
         counts = result_sim.get_counts()
 
