@@ -1,3 +1,5 @@
+import random
+
 import pygame
 
 from utils.parameters import WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT
@@ -50,6 +52,13 @@ def main():
 
         input.handle_input()
         ball.update()
+
+        left_paddle.rect.y = (
+            ball.rect.y
+            - left_paddle.height/2
+            + random.randint(- WIDTH_UNIT*4, WIDTH_UNIT*4)
+        )
+
         moving_sprites.update()
 
         circuit_grid.draw()
