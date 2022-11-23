@@ -4,6 +4,7 @@ from utils.parameters import WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT
 from utils.colors import BLACK
 from utils.input import Input
 from utils.ball import Ball
+from utils.paddle import Paddle
 from model import CircuitGridModel, CircuitGridNode
 from model import circuit_node_types as node_types
 from controls import CircuitGrid
@@ -33,18 +34,19 @@ def main():
     input = Input(circuit_grid, statevector_grid, right_statevector)
 
     # pong
-    left_paddle = pygame.sprite.Sprite()
-    right_paddle = pygame.sprite.Sprite()
+    left_paddle = Paddle()
+    #right_paddle = Paddle()
     ball = Ball(screen)
 
     moving_sprites = pygame.sprite.Group()
+    moving_sprites.add(left_paddle)
     moving_sprites.add(ball)
     
     while not input.exit:
         screen.fill(BLACK)
         input.handle_input()
         ball.update()
-        
+
         circuit_grid.draw()
         right_statevector.draw()
         moving_sprites.draw(screen)
