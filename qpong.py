@@ -23,13 +23,12 @@ def main():
     circuit_grid.draw()
 
     # initialize statevector grid
-    circuit = circuit_grid_model.compute_circuit()
-    statevector_grid = StatevectorGrid(circuit, 3, 100)
+    statevector_grid = StatevectorGrid(circuit_grid_model, 3, 100)
     right_statevector = VBox(WIDTH_UNIT*90, WIDTH_UNIT*0, screen, statevector_grid)
     right_statevector.draw()
 
     # initialize input
-    input = Input(circuit_grid)
+    input = Input(circuit_grid, statevector_grid, right_statevector)
 
     while not input.exit:
         input.handle_input()
