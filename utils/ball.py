@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from utils.parameters import WINDOW_HEIGHT, WINDOW_WIDTH, WIDTH_UNIT
+from utils.parameters import SCREEN_HEIGHT, WINDOW_WIDTH, WIDTH_UNIT
 from utils.colors import WHITE
 
 
@@ -14,7 +14,7 @@ class Ball(pygame.sprite.Sprite):
 
         self.screen = screen
 
-        self.screen_height = round(WINDOW_HEIGHT * 0.7)
+        self.screen_height = SCREEN_HEIGHT
         self.screen_width = WINDOW_WIDTH
         self.width_unit = WIDTH_UNIT
         self.height = self.width_unit
@@ -25,7 +25,7 @@ class Ball(pygame.sprite.Sprite):
         self.top_edge = self.width_unit * 0
         self.bottom_edge = self.screen_height - self.top_edge
 
-        self.image = pygame.Surface([self.height, self.width])
+        self.image = pygame.Surface([self.width, self.height])
         self.image.fill(WHITE)
 
         self.rect = self.image.get_rect()

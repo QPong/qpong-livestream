@@ -35,6 +35,7 @@ def main():
 
     # pong
     left_paddle = Paddle()
+    left_paddle.rect.x = 9 * WIDTH_UNIT
     #right_paddle = Paddle()
     ball = Ball(screen)
 
@@ -42,15 +43,21 @@ def main():
     moving_sprites.add(left_paddle)
     moving_sprites.add(ball)
     
+    clock = pygame.time.Clock()
+
     while not input.exit:
         screen.fill(BLACK)
+
         input.handle_input()
         ball.update()
+        moving_sprites.update()
 
         circuit_grid.draw()
         right_statevector.draw()
         moving_sprites.draw(screen)
         pygame.display.update()
+
+        clock.tick(60)
 
 if __name__ == '__main__':
     main()
