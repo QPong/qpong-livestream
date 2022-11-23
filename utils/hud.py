@@ -2,10 +2,10 @@ from utils.parameters import WINDOW_WIDTH, WIDTH_UNIT
 from utils.colors import GRAY
 from utils.font import Font
 
-def draw_score(font, score1, score2, screen):
+def draw_score(score1, score2, screen):
 
     font = Font()
-    
+
     # Print the score
     text = font.player_font.render("Classical Computer", 1, GRAY)
     text_pos = text.get_rect(

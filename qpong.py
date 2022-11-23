@@ -66,7 +66,7 @@ def main():
             pygame.sprite.collide_mask(ball, right_paddle):
             ball.bounce()
         
-        draw_score(font, classical_computer_left.score, classical_computer_right.score, screen)
+        draw_score(classical_computer_left.score, classical_computer_right.score, screen)
         circuit_grid.draw()
         right_statevector.draw()
         moving_sprites.draw(screen)
