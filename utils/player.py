@@ -9,6 +9,7 @@ class ClassicalComputer:
 
     def __init__(self, paddle):
         self.paddle = paddle
+        self.score = 0
 
     def update(self, ball):
         

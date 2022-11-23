@@ -8,6 +8,7 @@ from utils.input import Input
 from utils.ball import Ball
 from utils.paddle import Paddle
 from utils.player import ClassicalComputer
+from utils.hud import draw_score
 from model import CircuitGridModel, CircuitGridNode
 from model import circuit_node_types as node_types
 from controls import CircuitGrid
@@ -65,6 +66,7 @@ def main():
             pygame.sprite.collide_mask(ball, right_paddle):
             ball.bounce()
         
+        draw_score(font, classical_computer_left.score, classical_computer_right.score, screen)
         circuit_grid.draw()
         right_statevector.draw()
         moving_sprites.draw(screen)
