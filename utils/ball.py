@@ -30,32 +30,27 @@ class Ball(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect()
 
-        self.xpos = 0
-        self.ypos = 0
-        self.speed = 0
-        self.initial_speed_factor = 0.2
-        self.direction = 0
+        self.velocity = [0, 0]
+        #self.initial_speed_factor = 0.2
+        #self.direction = 0
 
         self.reset()
 
     def update(self):
         
-        radians = math.radians(self.direction)
+        self.rect.centerx += self.velocity[0]
+        self.rect.centery += self.velocity[1]
 
-        self.xpos += self.speed * math.sin(radians)
-        self.ypos -= self.speed * math.cos(radians)
+        if self.rect.centery <= self.top_edge:
+            self.velocity[1] = -self.velocity[1]
+        if self.rect.centery > self.bottom_edge - 1 * self.height:
+            self.velocity[1] = -self.velocity[1]
 
-        # Update ball position
-        self.rect.x = self.xpos
-        self.rect.y = self.ypos
-
-        if self.ypos <= self.top_edge:
-            self.direction = (180 - self.direction) % 360
-        if self.ypos > self.bottom_edge - 1 * self.height:
-            self.direction = (180 - self.direction) % 360
+    def bounce(self):
+        self.velocity[0] = -self.velocity[0]
+        self.velocity[1] = random.randint(-2,2)
     
     def reset(self):
-        self.xpos = self.screen_width / 2
-        self.ypos = self.screen_height / 2
-        self.speed = self.width_unit * self.initial_speed_factor
-        self.direction = random.randrange(-120, 120)
+        self.rect.centerx = self.screen_width / 2
+        self.rect.centery = self.screen_height / 2
+        self.velocity = [random.randint(-2,2), random.randint(-2,2)]

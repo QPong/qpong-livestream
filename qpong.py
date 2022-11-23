@@ -2,11 +2,12 @@ import random
 
 import pygame
 
-from utils.parameters import WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT
+from utils.parameters import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT
 from utils.colors import BLACK
 from utils.input import Input
 from utils.ball import Ball
 from utils.paddle import Paddle
+from utils.player import ClassicalComputer
 from model import CircuitGridModel, CircuitGridNode
 from model import circuit_node_types as node_types
 from controls import CircuitGrid
@@ -38,11 +39,15 @@ def main():
     # pong
     left_paddle = Paddle()
     left_paddle.rect.x = 9 * WIDTH_UNIT
-    #right_paddle = Paddle()
+    classical_computer_left = ClassicalComputer(left_paddle)
+    right_paddle = Paddle()
+    right_paddle.rect.x = WINDOW_WIDTH - 9 * WIDTH_UNIT
+    classical_computer_right = ClassicalComputer(right_paddle)
     ball = Ball(screen)
 
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(left_paddle)
+    moving_sprites.add(right_paddle)
     moving_sprites.add(ball)
     
     clock = pygame.time.Clock()
@@ -52,15 +57,14 @@ def main():
 
         input.handle_input()
         ball.update()
-
-        left_paddle.rect.y = (
-            ball.rect.y
-            - left_paddle.height/2
-            + random.randint(- WIDTH_UNIT*4, WIDTH_UNIT*4)
-        )
-
+        classical_computer_left.update(ball)
+        classical_computer_right.update(ball)
+        
         moving_sprites.update()
-
+        if pygame.sprite.collide_mask(ball, left_paddle) or\
+            pygame.sprite.collide_mask(ball, right_paddle):
+            ball.bounce()
+        
         circuit_grid.draw()
         right_statevector.draw()
         moving_sprites.draw(screen)
