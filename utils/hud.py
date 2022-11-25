@@ -1,7 +1,5 @@
-from utils.parameters import WINDOW_WIDTH, WIDTH_UNIT, NUM_QUBITS, SCREEN_HEIGHT
-from utils.colors import GRAY, WHITE
-from utils.font import Font
-from utils.states import comp_basis_states
+from utils.parameters import WINDOW_WIDTH, WIDTH_UNIT, NUM_QUBITS, SCREEN_HEIGHT, GRAY, WHITE
+from utils.resources import Font
 
 def draw_score(score1, score2, screen):
 
@@ -45,3 +43,11 @@ def draw_statevector_grid(screen):
         text_height = text.get_height()
         y_offset = block_size * 0.5 - text_height * 0.5
         screen.blit(text, (WINDOW_WIDTH - 7*WIDTH_UNIT, qb_idx * block_size + y_offset))
+
+
+def comp_basis_states(num_qubits):
+    basis_states = []
+    for idx in range(2**num_qubits):
+        state = format(idx, '0' + str(num_qubits) + 'b')
+        basis_states.append(state)
+    return basis_states

@@ -3,9 +3,9 @@ import random
 import pygame
 
 from utils.parameters import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT, RIGHT_EDGE
+    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT, RIGHT_EDGE,
+    BLACK
 )
-from utils.colors import BLACK
 from utils.ball import Ball
 from utils.paddle import Paddle, QuantumPaddles
 from utils.player import ClassicalComputer, QuantumComputer

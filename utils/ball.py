@@ -3,8 +3,7 @@ import random
 
 import pygame
 
-from utils.parameters import SCREEN_HEIGHT, WINDOW_WIDTH, WIDTH_UNIT
-from utils.colors import WHITE
+from utils.parameters import SCREEN_HEIGHT, WINDOW_WIDTH, WIDTH_UNIT, WHITE
 
 
 class Ball(pygame.sprite.Sprite):

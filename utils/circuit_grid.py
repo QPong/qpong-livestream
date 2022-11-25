@@ -20,8 +20,7 @@ import pygame
 
 from qiskit import QuantumCircuit, QuantumRegister
 
-from utils.colors import *
-from utils.navigation import *
+from utils.parameters import WHITE, BLACK, MAGENTA
 from utils.resources import *
 from utils import circuit_node_types as node_types
 
@@ -33,6 +32,11 @@ GATE_TILE_HEIGHT = 45
 
 LINE_WIDTH = 1
 
+# navigation
+MOVE_LEFT = 1
+MOVE_RIGHT = 2
+MOVE_UP = 3
+MOVE_DOWN = 4
 
 class CircuitGrid(pygame.sprite.RenderPlain):
     """Enables interaction with circuit"""

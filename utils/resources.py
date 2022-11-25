@@ -17,7 +17,6 @@
 import os
 
 import pygame
-#from pygame.compat import geterror
 from pygame.constants import RLEACCEL
 from utils.parameters import WIDTH_UNIT
 
@@ -30,7 +29,6 @@ def load_image(name, colorkey=None):
         image = pygame.image.load(fullname)
     except pygame.error:
         print ('Cannot load image:', fullname)
-        #raise SystemExit(str(geterror()))
     image = image.convert()
     if colorkey is not None:
         if colorkey == -1:
@@ -49,7 +47,6 @@ def load_sound(name):
         sound = pygame.mixer.Sound(fullname)
     except pygame.error:
         print ('Cannot load sound: %s' % fullname)
-        #raise SystemExit(str(geterror()))
     return sound
 
 def load_font(name, size=2 * WIDTH_UNIT):
@@ -70,3 +67,16 @@ def load_font(name, size=2 * WIDTH_UNIT):
         error_message = pygame.get_error()
         raise SystemExit(error_message) from pygame.error
     return font
+
+class Font:
+    """
+    Load fonts
+    """
+
+    def __init__(self):
+        self.gameover_font = load_font("bit5x3.ttf", 10 * WIDTH_UNIT)
+        self.credit_font = load_font("bit5x3.ttf", 2 * WIDTH_UNIT)
+        self.replay_font = load_font("bit5x3.ttf", 5 * WIDTH_UNIT)
+        self.score_font = load_font("bit5x3.ttf", 12 * WIDTH_UNIT)
+        self.vector_font = load_font("bit5x3.ttf", 3 * WIDTH_UNIT)
+        self.player_font = load_font("bit5x3.ttf", 3 * WIDTH_UNIT)

@@ -1,7 +1,6 @@
 import pygame
 
-from utils.colors import WHITE, BLUE
-from utils.parameters import WIDTH_UNIT, SCREEN_HEIGHT, NUM_QUBITS
+from utils.parameters import WIDTH_UNIT, SCREEN_HEIGHT, NUM_QUBITS, WHITE
 
 class Paddle(pygame.sprite.Sprite):
 
