@@ -4,8 +4,7 @@ import pygame
 
 from utils.parameters import (
     WINDOW_WIDTH, WINDOW_SIZE, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
-    BLACK,
-    MEASUREMENT_COOLDOWN_TIME
+    BLACK, MEASUREMENT_COOLDOWN_TIME, WIN_SCORE
 )
 from utils.ball import Ball
 from utils.paddle import Paddle, QuantumPaddles
