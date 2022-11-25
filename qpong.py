@@ -3,7 +3,7 @@ import random
 import pygame
 
 from utils.parameters import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT, RIGHT_EDGE,
+    WINDOW_WIDTH, WINDOW_SIZE, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
     BLACK
 )
 from utils.ball import Ball
@@ -22,16 +22,13 @@ def main():
     exit = False
     
     # initialize circuit grid
-    circuit_grid_model = CircuitGridModel(3, 16)
-    circuit_grid_model.set_node(0, 0, CircuitGridNode(node_types.IDEN))
-    circuit_grid = CircuitGrid(5, WINDOW_HEIGHT*0.7, circuit_grid_model, screen)
-    circuit_grid.draw()
+    circuit_grid = CircuitGrid(5, SCREEN_HEIGHT, screen)
 
     # pong
     left_paddle = Paddle(9 * WIDTH_UNIT)
     classical_computer = ClassicalComputer(left_paddle)
     right_paddles = QuantumPaddles(WINDOW_WIDTH - 9 * WIDTH_UNIT)
-    quantum_computer = QuantumComputer(right_paddles, circuit_grid, circuit_grid_model)
+    quantum_computer = QuantumComputer(right_paddles, circuit_grid)
     ball = Ball(screen)
 
     moving_sprites = pygame.sprite.Group()

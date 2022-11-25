@@ -24,11 +24,10 @@ class ClassicalComputer:
 
 class QuantumComputer:
 
-    def __init__(self, quantum_paddle, circuit_grid, circuit_grid_model):
+    def __init__(self, quantum_paddle, circuit_grid):
         self.paddles = quantum_paddle.paddles
         self.score = 0
         self.circuit_grid = circuit_grid
-        self.circuit_grid_model = circuit_grid_model
         self.exit = False
 
     def handle_input(self):
@@ -87,7 +86,7 @@ class QuantumComputer:
     def update_paddle_before_measurement(self):
 
         backend_sv_sim = BasicAer.get_backend("statevector_simulator")
-        circuit = self.circuit_grid_model.compute_circuit()
+        circuit = self.circuit_grid.model.compute_circuit()
         job_sim = execute(circuit, backend_sv_sim, shots=100)
         result_sim = job_sim.result()
         quantum_state = result_sim.get_statevector(circuit, decimals=3)
@@ -98,7 +97,7 @@ class QuantumComputer:
     def update_paddle_after_measurement(self):
 
         backend_sv_sim = BasicAer.get_backend("qasm_simulator")
-        circuit = self.circuit_grid_model.compute_circuit()
+        circuit = self.circuit_grid.model.compute_circuit()
         creg = ClassicalRegister(NUM_QUBITS)
         circuit.add_register(creg)  # add classical registers for measurement readout
         circuit.measure(circuit.qregs[0], circuit.cregs[0])
