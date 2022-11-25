@@ -10,8 +10,7 @@ from utils.ball import Ball
 from utils.paddle import Paddle, QuantumPaddles
 from utils.player import ClassicalComputer, QuantumComputer
 from utils.hud import draw_score, draw_statevector_grid
-from utils.circuit_grid import CircuitGrid, CircuitGridModel, CircuitGridNode
-import utils.circuit_node_types as node_types
+from utils.circuit_grid import CircuitGrid
 
 pygame.init()
 
@@ -42,16 +41,19 @@ def main():
         # update game
         ball.update()
 
-        # ball movement
-        if ball.rect.centerx <=0:
+        # if the ball hits the left wall, quantum computer scores 
+        if ball.rect.x < 0:
             quantum_computer.score+=1
-            ball.reset()
-        if ball.rect.centerx >= WINDOW_WIDTH:
+            ball.reset(1)
+        # if the ball hits the right wall, classical computer scores 
+        elif ball.rect.x > WINDOW_WIDTH:
             classical_computer.score+=1
-            ball.reset()
-        if ball.rect.centery <= ball.top_edge:
+            ball.reset(-1)
+
+        # if the ball hits the top or bottom wall, it bounces back
+        if ball.rect.y < ball.top_edge:
             ball.velocity[1] = -ball.velocity[1]
-        if ball.rect.centery > ball.bottom_edge - 1 * ball.height:
+        elif ball.rect.y > ball.bottom_edge:
             ball.velocity[1] = -ball.velocity[1]
 
         classical_computer.update(ball)
@@ -60,6 +62,7 @@ def main():
         # trigger measurement
         if RIGHT_EDGE - 12 * WIDTH_UNIT < ball.rect.centerx < RIGHT_EDGE - 10 * WIDTH_UNIT:
             measured_result = quantum_computer.update_paddle_after_measurement()
+            # measure_time = pygame.time.get_ticks()
         else:
             quantum_computer.update_paddle_before_measurement()
         

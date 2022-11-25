@@ -32,7 +32,7 @@ class Ball(pygame.sprite.Sprite):
         self.velocity = [0, 0]
         self.initial_speed = 4
 
-        self.reset()
+        self.reset(1)
 
     def update(self):
         
@@ -41,11 +41,16 @@ class Ball(pygame.sprite.Sprite):
 
     def bounce(self):
         # ball is speed up 10% after each bounce
-        self.velocity[0] = -self.velocity[0]*1.1
-        self.velocity[1] = random.randint(-self.initial_speed, self.initial_speed)
+        self.velocity[0] = -self.velocity[0] * 1.1
+        self.velocity[1] = self.velocity[1] * 1.1
     
-    def reset(self):
+    def reset(self, direction):
         self.rect.centerx = self.screen_width / 2
         self.rect.centery = self.screen_height / 2
-        self.velocity = [random.randint(self.initial_speed/2, self.initial_speed), 
+
+        if direction > 0:
+            self.velocity = [random.randint(self.initial_speed/2, self.initial_speed), 
+                            random.randint(-self.initial_speed, self.initial_speed)]
+        else: 
+            self.velocity = [random.randint(-self.initial_speed, -self.initial_speed/2), 
                             random.randint(-self.initial_speed, self.initial_speed)]
