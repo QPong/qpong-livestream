@@ -19,8 +19,8 @@ import numpy as np
 from utils.colors import *
 from utils.navigation import *
 from utils.resources import *
-from model.circuit_grid_model import CircuitGridNode
-from model import circuit_node_types as node_types
+from utils.circuit_grid_model import CircuitGridNode
+from utils import circuit_node_types as node_types
 
 GRID_WIDTH = 66
 GRID_HEIGHT = 66
