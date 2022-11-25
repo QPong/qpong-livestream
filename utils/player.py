@@ -78,6 +78,8 @@ class QuantumComputer:
                 elif event.key == pygame.K_RIGHT:
                     # Rotate a gate
                     self.circuit_grid.handle_input_rotate(np.pi / 8)
+                # update paddle when there is key events
+                self.update_paddle_before_measurement()
 
     def update_paddle_before_measurement(self):
 

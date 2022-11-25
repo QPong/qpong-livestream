@@ -4,7 +4,8 @@ import pygame
 
 from utils.parameters import (
     WINDOW_WIDTH, WINDOW_SIZE, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
-    BLACK
+    BLACK,
+    MEASUREMENT_COOLDOWN_TIME
 )
 from utils.ball import Ball
 from utils.paddle import Paddle, QuantumPaddles
@@ -34,6 +35,8 @@ def main():
     moving_sprites.add(ball)
 
     measured_result = 0
+    last_measurement_time = pygame.time.get_ticks()
+    quantum_computer.update_paddle_before_measurement()
     
     clock = pygame.time.Clock()
 
@@ -44,10 +47,12 @@ def main():
         # if the ball hits the left wall, quantum computer scores 
         if ball.rect.x < 0:
             quantum_computer.score+=1
+            quantum_computer.update_paddle_before_measurement()
             ball.reset(1)
         # if the ball hits the right wall, classical computer scores 
         elif ball.rect.x > WINDOW_WIDTH:
             classical_computer.score+=1
+            quantum_computer.update_paddle_before_measurement()
             ball.reset(-1)
 
         # if the ball hits the top or bottom wall, it bounces back
@@ -60,11 +65,11 @@ def main():
         quantum_computer.handle_input()
 
         # trigger measurement
-        if RIGHT_EDGE - 12 * WIDTH_UNIT < ball.rect.centerx < RIGHT_EDGE - 10 * WIDTH_UNIT:
+        current_time = pygame.time.get_ticks()
+        if RIGHT_EDGE - 12 * WIDTH_UNIT < ball.rect.centerx < RIGHT_EDGE - 10 * WIDTH_UNIT and \
+          current_time - last_measurement_time > MEASUREMENT_COOLDOWN_TIME:
             measured_result = quantum_computer.update_paddle_after_measurement()
-            # measure_time = pygame.time.get_ticks()
-        else:
-            quantum_computer.update_paddle_before_measurement()
+            last_measurement_time = pygame.time.get_ticks()
         
         if pygame.sprite.collide_mask(ball, left_paddle) or \
             pygame.sprite.collide_mask(ball, right_paddles.paddles[measured_result]):
