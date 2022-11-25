@@ -79,10 +79,6 @@ class QuantumComputer:
                     # Rotate a gate
                     self.circuit_grid.handle_input_rotate(np.pi / 8)
 
-            self.circuit_grid.draw()
-            self.update_paddle_before_measurement()
-            pygame.display.flip()
-
     def update_paddle_before_measurement(self):
 
         backend_sv_sim = BasicAer.get_backend("statevector_simulator")

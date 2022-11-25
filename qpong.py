@@ -19,12 +19,10 @@ screen = pygame.display.set_mode(WINDOW_SIZE)
 
 def main():
     pygame.display.set_caption('QPong')
-    exit = False
     
-    # initialize circuit grid
-    circuit_grid = CircuitGrid(5, SCREEN_HEIGHT, screen)
+    # initialize game
+    circuit_grid = CircuitGrid(5, SCREEN_HEIGHT)
 
-    # pong
     left_paddle = Paddle(9 * WIDTH_UNIT)
     classical_computer = ClassicalComputer(left_paddle)
     right_paddles = QuantumPaddles(WINDOW_WIDTH - 9 * WIDTH_UNIT)
@@ -41,10 +39,10 @@ def main():
     clock = pygame.time.Clock()
 
     while not quantum_computer.exit:
-        screen.fill(BLACK)
-
+        # update game
         ball.update()
 
+        # ball movement
         if ball.rect.centerx <=0:
             quantum_computer.score+=1
             ball.reset()
@@ -62,14 +60,18 @@ def main():
         # trigger measurement
         if RIGHT_EDGE - 12 * WIDTH_UNIT < ball.rect.centerx < RIGHT_EDGE - 10 * WIDTH_UNIT:
             measured_result = quantum_computer.update_paddle_after_measurement()
+        else:
+            quantum_computer.update_paddle_before_measurement()
         
         if pygame.sprite.collide_mask(ball, left_paddle) or \
             pygame.sprite.collide_mask(ball, right_paddles.paddles[measured_result]):
             ball.bounce()
         
+        # draw game
+        screen.fill(BLACK)
         draw_score(classical_computer.score, quantum_computer.score, screen)
         draw_statevector_grid(screen)
-        circuit_grid.draw()
+        circuit_grid.draw(screen)
         moving_sprites.draw(screen)
         pygame.display.update()
 

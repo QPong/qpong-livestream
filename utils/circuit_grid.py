@@ -40,7 +40,7 @@ MOVE_DOWN = 4
 
 class CircuitGrid(pygame.sprite.RenderPlain):
     """Enables interaction with circuit"""
-    def __init__(self, xpos, ypos, screen):
+    def __init__(self, xpos, ypos):
         self.xpos = xpos
         self.ypos = ypos
         self.selected_wire = 0
@@ -48,7 +48,6 @@ class CircuitGrid(pygame.sprite.RenderPlain):
         self.model = CircuitGridModel(NUM_QUBITS,16)
         self.circuit_grid_background = CircuitGridBackground(self.model)
         self.circuit_grid_cursor = CircuitGridCursor()
-        self.screen = screen
         self.gate_tiles = np.empty((self.model.max_wires,
                                     self.model.max_columns),
                                 dtype = CircuitGridGate)
@@ -62,9 +61,6 @@ class CircuitGrid(pygame.sprite.RenderPlain):
                                            self.gate_tiles,
                                            self.circuit_grid_cursor)
         self.update()
-
-    def draw(self):
-        super().draw(self.screen)
 
     def update(self, *args):
         sprite_list = self.sprites()
