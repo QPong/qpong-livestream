@@ -30,7 +30,7 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.velocity = [0, 0]
-        self.initial_speed = 4
+        self.initial_speed = 2
 
         self.reset(1)
 
@@ -41,16 +41,14 @@ class Ball(pygame.sprite.Sprite):
 
     def bounce(self):
         # ball is speed up 10% after each bounce
-        self.velocity[0] = -self.velocity[0] * 1.1
-        self.velocity[1] = self.velocity[1] * 1.1
+        self.velocity[0] = -self.velocity[0] * 1.5
+        self.velocity[1] = self.velocity[1] * 1.5
     
     def reset(self, direction):
         self.rect.centerx = self.screen_width / 2
         self.rect.centery = self.screen_height / 2
 
         if direction > 0:
-            self.velocity = [random.randint(self.initial_speed/2, self.initial_speed), 
-                            random.randint(-self.initial_speed, self.initial_speed)]
+            self.velocity = [random.randint(2, 4), random.randint(-4, 4)] * self.initial_speed
         else: 
-            self.velocity = [random.randint(-self.initial_speed, -self.initial_speed/2), 
-                            random.randint(-self.initial_speed, self.initial_speed)]
+            self.velocity = [random.randint(-4, -2), random.randint(-4, 4)] * self.initial_speed

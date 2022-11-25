@@ -35,7 +35,7 @@ def main():
     moving_sprites.add(ball)
 
     measured_result = 0
-    last_measurement_time = pygame.time.get_ticks()
+    last_measurement_time = pygame.time.get_ticks() - MEASUREMENT_COOLDOWN_TIME
     quantum_computer.update_paddle_before_measurement()
     
     clock = pygame.time.Clock()
