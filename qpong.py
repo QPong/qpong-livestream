@@ -10,7 +10,7 @@ from utils.ball import Ball
 from utils.paddle import Paddle, QuantumPaddles
 from utils.player import ClassicalComputer, QuantumComputer
 from utils.hud import draw_score, draw_statevector_grid
-from utils import CircuitGrid, CircuitGridModel, CircuitGridNode
+from utils.circuit_grid import CircuitGrid, CircuitGridModel, CircuitGridNode
 import utils.circuit_node_types as node_types
 
 pygame.init()

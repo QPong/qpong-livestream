@@ -17,5 +17,3 @@
 from .resources import load_image
 from .resources import load_sound
 from .states import comp_basis_states
-from .circuit_grid import CircuitGrid
-from .circuit_grid_model import CircuitGridModel, CircuitGridNode
