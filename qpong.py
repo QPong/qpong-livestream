@@ -3,19 +3,16 @@ import random
 import pygame
 
 from utils.parameters import (
-    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT, NUM_QUBITS, SCREEN_HEIGHT,
-    LEFT_EDGE, RIGHT_EDGE
+    WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_SIZE, WIDTH_UNIT, RIGHT_EDGE
 )
 from utils.colors import BLACK
 from utils.ball import Ball
-from utils.paddle import Paddle
+from utils.paddle import Paddle, QuantumPaddles
 from utils.player import ClassicalComputer, QuantumComputer
-from utils.hud import draw_score
+from utils.hud import draw_score, draw_statevector_grid
 from model import CircuitGridModel, CircuitGridNode
 from model import circuit_node_types as node_types
 from controls import CircuitGrid
-from viz import StatevectorGrid
-from containers import VBox
 
 pygame.init()
 
@@ -31,24 +28,19 @@ def main():
     circuit_grid = CircuitGrid(5, WINDOW_HEIGHT*0.7, circuit_grid_model, screen)
     circuit_grid.draw()
 
-    # initialize statevector grid
-    statevector_grid = StatevectorGrid(circuit_grid_model)
-    right_statevector = VBox(WIDTH_UNIT*90, WIDTH_UNIT*0, screen, statevector_grid)
-    right_statevector.draw()
-
     # pong
-    left_paddle = Paddle()
-    left_paddle.rect.x = 9 * WIDTH_UNIT
+    left_paddle = Paddle(9 * WIDTH_UNIT)
     classical_computer = ClassicalComputer(left_paddle)
-    right_paddle = Paddle()
-    right_paddle.rect.x = WINDOW_WIDTH - 9 * WIDTH_UNIT
-    quantum_computer = QuantumComputer(right_paddle, circuit_grid, statevector_grid, right_statevector)
+    right_paddles = QuantumPaddles(WINDOW_WIDTH - 9 * WIDTH_UNIT)
+    quantum_computer = QuantumComputer(right_paddles, circuit_grid, circuit_grid_model)
     ball = Ball(screen)
 
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(left_paddle)
-    moving_sprites.add(right_paddle)
+    moving_sprites.add(right_paddles.paddles)
     moving_sprites.add(ball)
+
+    measured_result = 0
     
     clock = pygame.time.Clock()
 
@@ -73,20 +65,15 @@ def main():
 
         # trigger measurement
         if RIGHT_EDGE - 12 * WIDTH_UNIT < ball.rect.centerx < RIGHT_EDGE - 10 * WIDTH_UNIT:
-            circuit = circuit_grid_model.compute_circuit()
-            pos = statevector_grid.paddle_after_measurement()
-            right_statevector.arrange()
-
-            # paddle after measurement
-            right_paddle.rect.y = pos * SCREEN_HEIGHT / (2**NUM_QUBITS)
+            measured_result = quantum_computer.update_paddle_after_measurement()
         
         if pygame.sprite.collide_mask(ball, left_paddle) or \
-            pygame.sprite.collide_mask(ball, right_paddle):
+            pygame.sprite.collide_mask(ball, right_paddles.paddles[measured_result]):
             ball.bounce()
         
         draw_score(classical_computer.score, quantum_computer.score, screen)
+        draw_statevector_grid(screen)
         circuit_grid.draw()
-        right_statevector.draw()
         moving_sprites.draw(screen)
         pygame.display.update()
 

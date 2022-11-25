@@ -3,7 +3,9 @@ import numpy as np
 
 import pygame
 
-from utils.parameters import WIDTH_UNIT
+from qiskit import BasicAer, execute, ClassicalRegister
+
+from utils.parameters import WIDTH_UNIT, NUM_QUBITS
 from utils.navigation import MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
 
 
@@ -22,12 +24,11 @@ class ClassicalComputer:
 
 class QuantumComputer:
 
-    def __init__(self, paddle, circuit_grid, statevector_grid, right_statevector):
-        self.paddle = paddle
+    def __init__(self, quantum_paddle, circuit_grid, circuit_grid_model):
+        self.paddles = quantum_paddle.paddles
         self.score = 0
         self.circuit_grid = circuit_grid
-        self.statevector_grid = statevector_grid
-        self.right_statevector = right_statevector
+        self.circuit_grid_model = circuit_grid_model
         self.exit = False
 
     def handle_input(self):
@@ -80,14 +81,35 @@ class QuantumComputer:
                     self.circuit_grid.handle_input_rotate(np.pi / 8)
 
             self.circuit_grid.draw()
-            self.update_paddle()
+            self.update_paddle_before_measurement()
             pygame.display.flip()
 
-    def update_paddle(self):
-        """
-        Update state vector paddle
-        """
-        # Update visualizations
-        self.statevector_grid.paddle_before_measurement()
-        self.right_statevector.arrange()
-        self.right_statevector.draw()
+    def update_paddle_before_measurement(self):
+
+        backend_sv_sim = BasicAer.get_backend("statevector_simulator")
+        circuit = self.circuit_grid_model.compute_circuit()
+        job_sim = execute(circuit, backend_sv_sim, shots=100)
+        result_sim = job_sim.result()
+        quantum_state = result_sim.get_statevector(circuit, decimals=3)
+
+        for basis_state, amplitude in enumerate(quantum_state):
+            self.paddles[basis_state].image.set_alpha(abs(amplitude) ** 2 * 255)
+
+    def update_paddle_after_measurement(self):
+
+        backend_sv_sim = BasicAer.get_backend("qasm_simulator")
+        circuit = self.circuit_grid_model.compute_circuit()
+        creg = ClassicalRegister(NUM_QUBITS)
+        circuit.add_register(creg)  # add classical registers for measurement readout
+        circuit.measure(circuit.qregs[0], circuit.cregs[0])
+        job_sim = execute(circuit, backend_sv_sim, shots=1)
+        result_sim = job_sim.result()
+        counts = result_sim.get_counts()
+
+        measured_result = int(list(counts.keys())[0], 2)
+
+        for paddle in self.paddles:
+            paddle.image.set_alpha(0)
+        self.paddles[measured_result].image.set_alpha(255)
+
+        return measured_result
