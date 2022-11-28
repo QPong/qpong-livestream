@@ -1,15 +1,15 @@
 import pygame
 
-from utils.parameters import (
+from assets.parameters import (
     WINDOW_WIDTH, WINDOW_SIZE, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
     BLACK, MEASUREMENT_COOLDOWN_TIME, WIN_SCORE, WHITE
 )
-from utils.ball import Ball
-from utils.paddle import Paddle, QuantumPaddles
-from utils.player import ClassicalComputer, QuantumComputer
-from utils.circuit_grid import CircuitGrid
-from utils.hud import draw_score, draw_statevector_grid
-from utils.resources import Font
+from assets.ball import Ball
+from assets.paddle import Paddle, QuantumPaddles
+from assets.player import ClassicalComputer, QuantumComputer
+from assets.circuit_grid import CircuitGrid
+from assets.hud import draw_score, draw_statevector_grid
+from assets.resources import Font
 
 class Scene:
     def __init__(self) -> None:

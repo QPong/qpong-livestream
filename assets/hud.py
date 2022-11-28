@@ -1,5 +1,5 @@
-from utils.parameters import WINDOW_WIDTH, WIDTH_UNIT, NUM_QUBITS, SCREEN_HEIGHT, GRAY, WHITE, BLACK, WIN_SCORE
-from utils.resources import Font
+from .parameters import WINDOW_WIDTH, WIDTH_UNIT, NUM_QUBITS, SCREEN_HEIGHT, GRAY, WHITE, BLACK, WIN_SCORE
+from .resources import Font
 
 def draw_score(score1, score2, screen):
 

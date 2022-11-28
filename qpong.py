@@ -1,7 +1,7 @@
 import pygame
 
-from utils.parameters import WINDOW_SIZE
-import scene
+from assets.parameters import WINDOW_SIZE
+import assets.scene as scene
 
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)

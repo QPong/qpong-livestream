@@ -18,13 +18,12 @@ import os
 
 import pygame
 from pygame.constants import RLEACCEL
-from utils.parameters import WIDTH_UNIT
+from .parameters import WIDTH_UNIT
 
-main_dir = os.path.split(os.path.abspath(__file__))[0]
-data_dir = os.path.join(main_dir, '../data')
+data_dir = os.path.split(os.path.abspath(__file__))[0]
 
 def load_image(name, colorkey=None):
-    fullname = os.path.join(data_dir, name)
+    fullname = os.path.join(data_dir, "images", name)
     try:
         image = pygame.image.load(fullname)
     except pygame.error:
