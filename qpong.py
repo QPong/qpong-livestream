@@ -9,7 +9,7 @@ pygame.display.set_caption('QPong')
 clock = pygame.time.Clock()
 
 scene_manager = scene.SceneManager()
-game_scene = scene.GameScene(scene)
+game_scene = scene.GameScene()
 scene_manager.push(game_scene)
 
 def main():

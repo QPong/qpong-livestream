@@ -8,10 +8,8 @@ from utils.parameters import SCREEN_HEIGHT, WINDOW_WIDTH, WIDTH_UNIT, WHITE
 
 class Ball(pygame.sprite.Sprite):
 
-    def __init__(self, screen):
+    def __init__(self):
         super().__init__()
-
-        self.screen = screen
 
         self.screen_height = SCREEN_HEIGHT
         self.screen_width = WINDOW_WIDTH

@@ -43,7 +43,7 @@ class QuantumComputer:
                 sm.exit = True
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    self.exit = True
+                    sm.exit = True
                 elif event.key == pygame.K_a:
                     self.circuit_grid.move_to_adjacent_node(MOVE_LEFT)
                 elif event.key == pygame.K_d:
