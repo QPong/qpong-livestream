@@ -1,7 +1,7 @@
 import pygame
 
 from assets.parameters import (
-    WINDOW_WIDTH, WINDOW_SIZE, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
+    WINDOW_WIDTH, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
     BLACK, MEASUREMENT_COOLDOWN_TIME, WIN_SCORE, WHITE
 )
 from assets.ball import Ball

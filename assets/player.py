@@ -1,11 +1,10 @@
-import random
 import numpy as np
 
 import pygame
 
 from qiskit import BasicAer, execute, ClassicalRegister
 
-from .parameters import WIDTH_UNIT, NUM_QUBITS
+from .parameters import NUM_QUBITS
 from .circuit_grid import MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
 
 
