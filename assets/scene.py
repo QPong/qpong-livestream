@@ -2,8 +2,9 @@ import pygame
 
 from assets.parameters import (
     WINDOW_WIDTH, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
-    BLACK, MEASUREMENT_COOLDOWN_TIME, WIN_SCORE, WHITE
+    MEASUREMENT_COOLDOWN_TIME, WIN_SCORE
 )
+from . import colors
 from assets.ball import Ball
 from assets.paddle import Paddle, QuantumPaddles
 from assets.player import ClassicalComputer, QuantumComputer
@@ -79,7 +80,7 @@ class GameScene(Scene):
             sm.push(LoseScene())
         
     def draw(self, sm, screen):
-        screen.fill(BLACK)
+        screen.fill(colors.BLACK)
         draw_score(self.classical_computer.score, self.quantum_computer.score, screen)
         draw_statevector_grid(screen)
         self.circuit_grid.draw(screen)
@@ -99,20 +100,20 @@ class WinScene(Scene):
                     sm.push(GameScene())
     def draw(self, sm, screen):
         font = Font()
-        screen.fill(BLACK)
+        screen.fill(colors.BLACK)
 
         gameover_text = "Congratulations!"
-        text = font.gameover_font.render(gameover_text, 5, WHITE)
+        text = font.gameover_font.render(gameover_text, 5, colors.WHITE)
         text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 10))
         screen.blit(text, text_pos)
 
         gameover_text = "You demonstrated quantum supremacy"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
+        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
         text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 22))
         screen.blit(text, text_pos)
 
         gameover_text = "for the first time in human history!"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
+        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
         text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 27))
         screen.blit(text, text_pos)
 
@@ -130,20 +131,20 @@ class LoseScene(Scene):
                     sm.push(GameScene())
     def draw(self, sm, screen):
         font = Font()
-        screen.fill(BLACK)
+        screen.fill(colors.BLACK)
 
         gameover_text = "Game Over"
-        text = font.gameover_font.render(gameover_text, 1, WHITE)
+        text = font.gameover_font.render(gameover_text, 1, colors.WHITE)
         text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 10))
         screen.blit(text, text_pos)
 
         gameover_text = "Classical computer"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
+        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
         text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 22))
         screen.blit(text, text_pos)
 
         gameover_text = "still rules the world"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
+        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
         text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 27))
         screen.blit(text, text_pos)
 

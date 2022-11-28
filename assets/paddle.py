@@ -1,6 +1,7 @@
 import pygame
 
-from .parameters import WIDTH_UNIT, SCREEN_HEIGHT, NUM_QUBITS, WHITE
+from .parameters import WIDTH_UNIT, SCREEN_HEIGHT, NUM_QUBITS
+from . import colors
 
 class Paddle(pygame.sprite.Sprite):
 
@@ -10,7 +11,7 @@ class Paddle(pygame.sprite.Sprite):
         self.width = WIDTH_UNIT
         self.height = round(SCREEN_HEIGHT / 2**NUM_QUBITS)
         self.image = pygame.Surface([self.width, self.height])
-        self.image.fill(WHITE)
+        self.image.fill(colors.WHITE)
         self.image.set_alpha(255)
         self.rect = self.image.get_rect()
         self.rect.x = x_pos
