@@ -1,7 +1,4 @@
 *.pyc
+__pycache__
 
 .DS_Store
-
-utils/data/bell_circuit.png
-utils/data/bell_histogram.png
-utils/data/bell_qsphere.png
