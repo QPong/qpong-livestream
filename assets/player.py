@@ -15,7 +15,6 @@ class ClassicalComputer:
         self.score = 0
 
     def update(self, ball):
-        
         if self.paddle.rect.centery - ball.rect.centery > 0:
             self.paddle.rect.centery -= 3
         else:

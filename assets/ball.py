@@ -13,16 +13,8 @@ class Ball(pygame.sprite.Sprite):
 
         self.screen_height = SCREEN_HEIGHT
         self.screen_width = WINDOW_WIDTH
-        self.width_unit = WIDTH_UNIT
-        self.height = self.width_unit
-        self.width = self.width_unit
 
-        self.left_edge = self.width_unit
-        self.right_edge = self.screen_width - self.left_edge
-        self.top_edge = self.width_unit * 0
-        self.bottom_edge = self.screen_height - self.top_edge
-
-        self.image = pygame.Surface([self.width, self.height])
+        self.image = pygame.Surface([WIDTH_UNIT, WIDTH_UNIT])
         self.image.fill(colors.WHITE)
 
         self.rect = self.image.get_rect()

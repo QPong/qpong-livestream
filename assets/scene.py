@@ -1,7 +1,7 @@
 import pygame
 
 from assets.parameters import (
-    WINDOW_WIDTH, SCREEN_HEIGHT, WIDTH_UNIT, RIGHT_EDGE,
+    WINDOW_WIDTH, SCREEN_HEIGHT, WIDTH_UNIT,
     MEASUREMENT_COOLDOWN_TIME, WIN_SCORE
 )
 from . import colors
@@ -55,9 +55,7 @@ class GameScene(Scene):
             self.ball.reset(-1)
 
         # if the ball hits the top or bottom wall, it bounces back
-        if self.ball.rect.y < self.ball.top_edge:
-            self.ball.velocity[1] = -self.ball.velocity[1]
-        elif self.ball.rect.y > self.ball.bottom_edge:
+        if self.ball.rect.y < 0 or self.ball.rect.y > SCREEN_HEIGHT:
             self.ball.velocity[1] = -self.ball.velocity[1]
 
         self.classical_computer.update(self.ball)
@@ -65,7 +63,7 @@ class GameScene(Scene):
 
         # trigger measurement
         self.current_time = pygame.time.get_ticks()
-        if RIGHT_EDGE - 12 * WIDTH_UNIT < self.ball.rect.centerx < RIGHT_EDGE - 10 * WIDTH_UNIT and \
+        if WINDOW_WIDTH - 12 * WIDTH_UNIT < self.ball.rect.centerx < WINDOW_WIDTH - 10 * WIDTH_UNIT and \
           self.current_time - self.last_measurement_time > MEASUREMENT_COOLDOWN_TIME:
             self.measured_result = self.quantum_computer.update_paddle_after_measurement()
             self.last_measurement_time = pygame.time.get_ticks()
@@ -74,6 +72,7 @@ class GameScene(Scene):
             pygame.sprite.collide_mask(self.ball, self.right_paddles.paddles[self.measured_result]):
             self.ball.bounce()
 
+        # check winner
         if self.quantum_computer.score >= WIN_SCORE:
             sm.push(WinScene())
         elif self.classical_computer.score >= WIN_SCORE:

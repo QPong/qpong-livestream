@@ -5,9 +5,9 @@ import pygame
 from qiskit import QuantumCircuit, QuantumRegister
 
 from .parameters import NUM_QUBITS
-from . import colors
-from .resources import *
+from .resources import load_image
 from . import circuit_node_types as node_types
+from . import colors
 
 GRID_WIDTH = 66
 GRID_HEIGHT = 66

@@ -1,11 +1,9 @@
 from .parameters import WINDOW_WIDTH, WIDTH_UNIT, NUM_QUBITS, SCREEN_HEIGHT
-from . import colors
 from .resources import Font
+from . import colors
 
 def draw_score(score1, score2, screen):
-
     font = Font()
-
     # Print the score
     text = font.player_font.render("Classical Computer", 1, colors.GRAY)
     text_pos = text.get_rect(
