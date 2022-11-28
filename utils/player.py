@@ -28,9 +28,8 @@ class QuantumComputer:
         self.paddles = quantum_paddle.paddles
         self.score = 0
         self.circuit_grid = circuit_grid
-        self.exit = False
 
-    def handle_input(self):
+    def handle_input(self, sm):
         # pylint: disable=too-many-branches disable=too-many-statements
         """
         Handle quantum player input
@@ -41,7 +40,7 @@ class QuantumComputer:
             pygame.event.pump()
 
             if event.type == pygame.QUIT:
-                self.exit = True
+                sm.exit = True
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.exit = True

@@ -38,13 +38,7 @@ class GameScene(Scene):
         self.last_measurement_time = pygame.time.get_ticks() - MEASUREMENT_COOLDOWN_TIME
         self.quantum_computer.update_paddle_before_measurement()
 
-    def onEnter(self):
-        pass
-
-    def input(self, sm, input_stream):
-        print('game input')
-
-    def update(self, sm, input_stream):
+    def update(self, sm):
         self.ball.update()
         
         # if the ball hits the left wall, quantum computer scores 
@@ -65,7 +59,7 @@ class GameScene(Scene):
             self.ball.velocity[1] = -self.ball.velocity[1]
 
         self.classical_computer.update(self.ball)
-        self.quantum_computer.handle_input()
+        self.quantum_computer.handle_input(sm)
 
         # trigger measurement
         self.current_time = pygame.time.get_ticks()
@@ -94,37 +88,25 @@ class GameOverScene(Scene):
         pass
 
 
-
 class SceneManager:
     def __init__(self):
         self.scenes = []
-    def isEmpty(self):
-        return len(self.scenes) == 0
-    def enterScene(self):
+        self.exit = False
+    def input(self):
         if len(self.scenes) > 0:
-            self.scenes[-1].onEnter()
-    def exitScene(self):
+            self.scenes[-1].input(self)
+    def update(self):
         if len(self.scenes) > 0:
-            self.scenes[-1].onExit()
-    def input(self, inputStream):
-        if len(self.scenes) > 0:
-            self.scenes[-1].input(self, inputStream)
-    def update(self, inputStream):
-        if len(self.scenes) > 0:
-            self.scenes[-1].update(self, inputStream)
+            self.scenes[-1].update(self)
     def draw(self, screen):
         if len(self.scenes) > 0:
             self.scenes[-1].draw(self, screen)
         # present screen
         pygame.display.flip()
     def push(self, scene):
-        self.exitScene()
         self.scenes.append(scene)
-        self.enterScene()
     def pop(self):
-        self.exitScene()
         self.scenes.pop()
-        self.enterScene()
     def set(self, scenes):
         # pop all scenes
         while len(self.scenes) > 0:
