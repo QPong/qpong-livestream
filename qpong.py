@@ -2,6 +2,7 @@ import pygame
 import numpy as np
 
 from assets.circuit_grid import CircuitGrid, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
+from assets.hud import draw_statevector_grid
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 750))
@@ -57,6 +58,7 @@ def main():
                     circuit_grid.handle_input_rotate(np.pi / 8)
 
         # draw game
+        draw_statevector_grid(screen)
         circuit_grid.draw(screen)
         pygame.display.flip()
 
