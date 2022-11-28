@@ -30,44 +30,6 @@ def draw_score(score1, score2, screen):
     )
     screen.blit(text, text_pos)
 
-    if score1 >= WIN_SCORE:
-        screen.fill(BLACK)
-
-        gameover_text = "Game Over"
-        text = font.gameover_font.render(gameover_text, 1, WHITE)
-        text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 10))
-        screen.blit(text, text_pos)
-
-        gameover_text = "Classical computer"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
-        text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 22))
-        screen.blit(text, text_pos)
-
-        gameover_text = "still rules the world"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
-        text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 27))
-        screen.blit(text, text_pos)
-
-    elif score2 >= WIN_SCORE:
-        
-        screen.fill(BLACK)
-
-        gameover_text = "Congratulations!"
-        text = font.gameover_font.render(gameover_text, 5, WHITE)
-        text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 10))
-        screen.blit(text, text_pos)
-
-        gameover_text = "You demonstrated quantum supremacy"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
-        text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 22))
-        screen.blit(text, text_pos)
-
-        gameover_text = "for the first time in human history!"
-        text = font.replay_font.render(gameover_text, 5, WHITE)
-        text_pos = text.get_rect(center=(WINDOW_WIDTH / 2, WIDTH_UNIT * 27))
-        screen.blit(text, text_pos)
-        
-
 
 def draw_statevector_grid(screen):
     font = Font()
