@@ -70,10 +70,6 @@ class CircuitGrid(pygame.sprite.RenderPlain):
         self.circuit_grid_cursor.rect.left = self.xpos + GRID_WIDTH * (self.selected_column + 1)
         self.circuit_grid_cursor.rect.top = self.ypos + GRID_HEIGHT * (self.selected_wire + 0.5)
 
-    def display_exceptional_condition(self):
-        # TODO: Make cursor appearance indicate condition such as unable to place a gate
-        return
-
     def move_to_adjacent_node(self, direction):
         if direction == MOVE_LEFT and self.selected_column > 0:
             self.selected_column -= 1
@@ -119,7 +115,6 @@ class CircuitGrid(pygame.sprite.RenderPlain):
 
     def handle_input_delete(self):
         selected_node_gate_part = self.get_selected_node_gate_part()
-        print('In handle_input_delete, node_type in selected node is: ', selected_node_gate_part)
         if selected_node_gate_part == node_types.X or \
             selected_node_gate_part == node_types.Y or \
                 selected_node_gate_part == node_types.Z or \
@@ -131,10 +126,7 @@ class CircuitGrid(pygame.sprite.RenderPlain):
                 self.model.get_gate_wire_for_control_node(self.selected_wire,
                                                                        self.selected_column)
             if gate_wire_num >= 0:
-                self.delete_controls_for_gate(gate_wire_num, self.selected_column)                # for wire_idx in range(min(self.selected_wire, gate_wire_num),
-                #                       max(self.selected_wire, gate_wire_num) + 1):
-                #     print("Replacing wire ", wire_idx, " in column ", self.selected_column)
-                #     self.circuit_grid_model.set_node(wire_idx, self.selected_column, node_types.IDEN)
+                self.delete_controls_for_gate(gate_wire_num, self.selected_column)
         elif selected_node_gate_part != node_types.SWAP and \
                 selected_node_gate_part != node_types.CTRL and \
                 selected_node_gate_part != node_types.TRACE:
@@ -144,8 +136,6 @@ class CircuitGrid(pygame.sprite.RenderPlain):
         self.update()
 
     def handle_input_ctrl(self):
-        # TODO: Handle Toffoli gates. For now, control qubit is assumed to be in ctrl_a variable
-        #       with ctrl_b variable reserved for Toffoli gates
         selected_node_gate_part = self.get_selected_node_gate_part()
         if selected_node_gate_part == node_types.X or \
             selected_node_gate_part == node_types.Y or \
@@ -176,10 +166,6 @@ class CircuitGrid(pygame.sprite.RenderPlain):
                                 self.display_exceptional_condition()
 
     def handle_input_move_ctrl(self, direction):
-        # TODO: Handle Toffoli gates. For now, control qubit is assumed to be in ctrl_a variable
-        #       with ctrl_b variable reserved for Toffoli gates
-        # TODO: Simplify the logic in this method, including considering not actually ever
-        #       placing a TRACE, but rather always dynamically calculating if a TRACE s/b displayed
         selected_node_gate_part = self.get_selected_node_gate_part()
         if selected_node_gate_part == node_types.X or \
             selected_node_gate_part == node_types.Y or \
@@ -265,8 +251,6 @@ class CircuitGrid(pygame.sprite.RenderPlain):
             control_wire_num = control_b_wire_num
 
         if control_wire_num >= 0:
-            # TODO: If this is a controlled gate, remove the connecting TRACE parts between the gate and the control
-            # ALSO: Refactor with similar code in this method
             for wire_idx in range(min(gate_wire_num, control_wire_num),
                                   max(gate_wire_num, control_wire_num) + 1):
                 print("Replacing wire ", wire_idx, " in column ", column_num)
@@ -311,8 +295,6 @@ class CircuitGridGate(pygame.sprite.Sprite):
         elif node_type == node_types.X:
             node = self.circuit_grid_model.get_node(self.wire_num, self.column_num)
             if node.ctrl_a >= 0 or node.ctrl_b >= 0:
-                # This is a control-X gate or Toffoli gate
-                # TODO: Handle Toffoli gates more completely
                 if self.wire_num > max(node.ctrl_a, node.ctrl_b):
                     self.image, self.rect = load_image('gates/not_gate_below_ctrl.png', -1)
                 else:
@@ -353,7 +335,6 @@ class CircuitGridGate(pygame.sprite.Sprite):
         elif node_type == node_types.IDEN:
             self.image, self.rect = load_image('gates/iden_gate.png', -1)
         elif node_type == node_types.CTRL:
-            # TODO: Handle Toffoli gates correctly
             if self.wire_num > \
                     self.circuit_grid_model.get_gate_wire_for_control_node(self.wire_num, self.column_num):
                 self.image, self.rect = load_image('gates/ctrl_gate_bottom_wire.png', -1)
@@ -392,11 +373,9 @@ class CircuitGridModel():
         for wire_num in range(self.max_wires):
             retval += '\n'
             for column_num in range(self.max_columns):
-                # retval += str(self.nodes[wire_num][column_num]) + ', '
                 retval += str(self.get_node_gate_part(wire_num, column_num)) + ', '
         return 'CircuitGridModel: ' + retval
 
-    # def set_node(self, wire_num, column_num, node_type, radians=0, ctrl_a=-1, ctrl_b=-1, swap=-1):
     def set_node(self, wire_num, column_num, circuit_grid_node):
         self.nodes[wire_num][column_num] = \
             CircuitGridNode(circuit_grid_node.node_type,
@@ -404,12 +383,6 @@ class CircuitGridModel():
                             circuit_grid_node.ctrl_a,
                             circuit_grid_node.ctrl_b,
                             circuit_grid_node.swap)
-
-        # TODO: Decide whether to protect as shown below
-        # if not self.nodes[wire_num][column_num]:
-        #     self.nodes[wire_num][column_num] = CircuitGridNode(node_type, radians)
-        # else:
-        #     print('Node ', wire_num, column_num, ' not empty')
 
     def get_node(self, wire_num, column_num):
         return self.nodes[wire_num][column_num]
@@ -448,13 +421,6 @@ class CircuitGridModel():
                               self.get_node_gate_part(gate_wire_num, column_num),
                               " on wire: " , gate_wire_num)
         return gate_wire_num
-
-    # def avail_gate_parts_for_node(self, wire_num, column_num):
-    #     retval = np.empty(0, dtype = np.int8)
-    #     node_gate_part = self.get_node_gate_part(wire_num, column_num)
-    #     if node_gate_part == node_types.EMPTY:
-    #         # No gate part in this node
-
 
     def compute_circuit(self):
         qr = QuantumRegister(self.max_wires, 'q')
