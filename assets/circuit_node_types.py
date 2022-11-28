@@ -1,6 +1,3 @@
-#
-# Copyright 2019 the original author or authors.
-#
 EMPTY = -1
 IDEN = 0
 X = 1
