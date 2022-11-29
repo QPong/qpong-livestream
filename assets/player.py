@@ -25,8 +25,11 @@ class QuantumComputer(Computer):
         self.score = 0
         self.circuit_grid = circuit_grid
     
-    def update(self):
-        self.update_paddle_before_measurement()
+    def update(self, measured=False):
+        if measured:
+            return self.update_paddle_after_measurement()
+        else:
+            return self.update_paddle_before_measurement()
 
     def update_paddle_before_measurement(self):
         simulator = qiskit.BasicAer.get_backend("statevector_simulator")
@@ -36,4 +39,19 @@ class QuantumComputer(Computer):
 
         for basis_state, amplitude in enumerate(statevector):
             self.paddles[basis_state].image.set_alpha(abs(amplitude)**2*255)
+        
+        return None
 
+    def update_paddle_after_measurement(self):
+        simulator = qiskit.BasicAer.get_backend("qasm_simulator")
+        circuit = self.circuit_grid.model.compute_circuit()
+        circuit.measure_all()
+        transpiled_circuit = qiskit.transpile(circuit, simulator)
+        counts = simulator.run(transpiled_circuit, shots=1).result().get_counts()
+        measured_state = int(list(counts.keys())[0], 2)
+
+        for paddle in self.paddles:
+            paddle.image.set_alpha(0)
+        self.paddles[measured_state].image.set_alpha(255)
+
+        return measured_state 

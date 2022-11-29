@@ -28,6 +28,8 @@ def main():
     moving_sprites.add(right_paddles.paddles)
     moving_sprites.add(ball)
 
+    measured_state=0
+
     exit = False
     while not exit:
         # update game
@@ -72,8 +74,20 @@ def main():
                     circuit_grid.handle_input_rotate(np.pi / 8)
 
         ball.update()
+
+        if 8 * parameters.WIDTH_UNIT \
+            < parameters.WINDOW_WIDTH - ball.rect.x \
+                < 12 * parameters.WIDTH_UNIT:
+                measured_state = quantum_computer.update_paddle_after_measurement()
+        else:
+            quantum_computer.update_paddle_before_measurement()
+
         classical_computer.update(ball)
-        quantum_computer.update()
+        
+
+        if pygame.sprite.collide_mask(ball, left_paddle) or \
+            pygame.sprite.collide_mask(ball, right_paddles.paddles[measured_state]):
+            ball.bounce()
 
         # draw game
         screen.fill(colors.BLACK)
