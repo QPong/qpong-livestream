@@ -4,6 +4,7 @@ import numpy as np
 from assets.circuit_grid import CircuitGrid, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
 from assets.hud import draw_statevector_grid
 from assets.paddle import Paddle, QuantumPaddles
+from assets.ball import Ball
 from assets import colors
 from assets import parameters
 
@@ -18,9 +19,11 @@ def main():
     circuit_grid = CircuitGrid(5, round(750*0.7))
     left_paddle = Paddle(9 * parameters.WIDTH_UNIT)
     right_paddles = QuantumPaddles(parameters.WINDOW_WIDTH - 9 * parameters.WIDTH_UNIT)
+    ball = Ball()
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(left_paddle)
     moving_sprites.add(right_paddles.paddles)
+    moving_sprites.add(ball)
 
     exit = False
     while not exit:
@@ -65,7 +68,10 @@ def main():
                     # Rotate a gate
                     circuit_grid.handle_input_rotate(np.pi / 8)
 
+        ball.update()
+
         # draw game
+        screen.fill(colors.BLACK)
         draw_statevector_grid(screen)
         circuit_grid.draw(screen)
         moving_sprites.draw(screen)
