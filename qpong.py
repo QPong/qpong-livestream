@@ -5,7 +5,7 @@ from assets.circuit_grid import CircuitGrid, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE
 from assets.hud import draw_statevector_grid
 from assets.paddle import Paddle, QuantumPaddles
 from assets.ball import Ball
-from assets.player import ClassicalComputer
+from assets.player import ClassicalComputer, QuantumComputer
 from assets import colors
 from assets import parameters
 
@@ -21,6 +21,7 @@ def main():
     left_paddle = Paddle(9 * parameters.WIDTH_UNIT)
     classical_computer = ClassicalComputer(left_paddle)
     right_paddles = QuantumPaddles(parameters.WINDOW_WIDTH - 9 * parameters.WIDTH_UNIT)
+    quantum_computer = QuantumComputer(right_paddles, circuit_grid) 
     ball = Ball()
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(left_paddle)
@@ -72,6 +73,7 @@ def main():
 
         ball.update()
         classical_computer.update(ball)
+        quantum_computer.update()
 
         # draw game
         screen.fill(colors.BLACK)
