@@ -3,6 +3,9 @@ import numpy as np
 
 from assets.circuit_grid import CircuitGrid, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
 from assets.hud import draw_statevector_grid
+from assets.paddle import Paddle, QuantumPaddles
+from assets import colors
+from assets import parameters
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 750))
@@ -13,6 +16,11 @@ def main():
 
     # initialize game
     circuit_grid = CircuitGrid(5, round(750*0.7))
+    left_paddle = Paddle(9 * parameters.WIDTH_UNIT)
+    right_paddles = QuantumPaddles(parameters.WINDOW_WIDTH - 9 * parameters.WIDTH_UNIT)
+    moving_sprites = pygame.sprite.Group()
+    moving_sprites.add(left_paddle)
+    moving_sprites.add(right_paddles.paddles)
 
     exit = False
     while not exit:
@@ -60,6 +68,7 @@ def main():
         # draw game
         draw_statevector_grid(screen)
         circuit_grid.draw(screen)
+        moving_sprites.draw(screen)
         pygame.display.flip()
 
         clock.tick(60)

@@ -8,6 +8,8 @@ WIDTH_UNIT = round(WINDOW_WIDTH / 100) # width unit used for scaling the game
 
 # number of the qubits for the quantum circuit
 NUM_QUBITS=3
+
+PADDLE_HEIGHT = round(SCREEN_HEIGHT / 2**NUM_QUBITS)
 # cool down time (in milliseconds) before the next measurement is allowed
 MEASUREMENT_COOLDOWN_TIME = 4000
 # score to win a game
