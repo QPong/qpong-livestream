@@ -2,6 +2,8 @@ import pygame
 
 import qiskit
 
+from . import parameters
+
 class Computer:
     def __init__(self) -> None:
         pass
@@ -24,12 +26,19 @@ class QuantumComputer(Computer):
         self.paddles = quantum_paddle.paddles 
         self.score = 0
         self.circuit_grid = circuit_grid
+        self.measured_state = 0
+        self.last_measurement_time = pygame.time.get_ticks() - parameters.MEASUREMENT_COOLDOWN_TIME
     
-    def update(self, measured=False):
-        if measured:
-            return self.update_paddle_after_measurement()
+    def update(self, ball):
+        current_time = pygame.time.get_ticks()
+        if 8 * parameters.WIDTH_UNIT \
+            < parameters.WINDOW_WIDTH - ball.rect.x \
+            < 12 * parameters.WIDTH_UNIT:
+            if current_time - self.last_measurement_time > parameters.MEASUREMENT_COOLDOWN_TIME:
+                self.update_paddle_after_measurement()
+                self.last_measurement_time = pygame.time.get_ticks()
         else:
-            return self.update_paddle_before_measurement()
+            self.update_paddle_before_measurement()
 
     def update_paddle_before_measurement(self):
         simulator = qiskit.BasicAer.get_backend("statevector_simulator")
@@ -48,10 +57,8 @@ class QuantumComputer(Computer):
         circuit.measure_all()
         transpiled_circuit = qiskit.transpile(circuit, simulator)
         counts = simulator.run(transpiled_circuit, shots=1).result().get_counts()
-        measured_state = int(list(counts.keys())[0], 2)
+        self.measured_state = int(list(counts.keys())[0], 2)
 
         for paddle in self.paddles:
             paddle.image.set_alpha(0)
-        self.paddles[measured_state].image.set_alpha(255)
-
-        return measured_state 
+        self.paddles[self.measured_state].image.set_alpha(255)
