@@ -1,13 +1,6 @@
 import pygame
-import numpy as np
 
-from assets.circuit_grid import CircuitGrid, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
-from assets.ui import draw_statevector_grid, draw_score, draw_dashed_line
-from assets.paddle import Paddle, QuantumPaddles
-from assets.ball import Ball
-from assets.player import ClassicalComputer, QuantumComputer
-from assets import colors
-from assets import parameters
+from assets import scene
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 750))
@@ -17,84 +10,14 @@ clock = pygame.time.Clock()
 def main():
 
     # initialize game
-    circuit_grid = CircuitGrid(5, round(750*0.7))
-    left_paddle = Paddle(9 * parameters.WIDTH_UNIT)
-    classical_computer = ClassicalComputer(left_paddle)
-    right_paddles = QuantumPaddles(parameters.WINDOW_WIDTH - 9 * parameters.WIDTH_UNIT)
-    quantum_computer = QuantumComputer(right_paddles, circuit_grid) 
-    ball = Ball()
-    moving_sprites = pygame.sprite.Group()
-    moving_sprites.add(left_paddle)
-    moving_sprites.add(right_paddles.paddles)
-    moving_sprites.add(ball)
+    scene_manager = scene.SceneManager()
+    scene_manager.push(scene.GameScene())
 
-    exit = False
-    while not exit:
+    while not scene_manager.exit:
         # update game
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                exit = True
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    exit = True
-                elif event.key == pygame.K_a:
-                    circuit_grid.move_to_adjacent_node(MOVE_LEFT)
-                elif event.key == pygame.K_d:
-                    circuit_grid.move_to_adjacent_node(MOVE_RIGHT)
-                elif event.key == pygame.K_w:
-                    circuit_grid.move_to_adjacent_node(MOVE_UP)
-                elif event.key == pygame.K_s:
-                    circuit_grid.move_to_adjacent_node(MOVE_DOWN)
-                elif event.key == pygame.K_x:
-                    circuit_grid.handle_input_x()
-                elif event.key == pygame.K_y:
-                    circuit_grid.handle_input_y()
-                elif event.key == pygame.K_z:
-                    circuit_grid.handle_input_z()
-                elif event.key == pygame.K_h:
-                    circuit_grid.handle_input_h()
-                elif event.key == pygame.K_SPACE:
-                    circuit_grid.handle_input_delete()
-                elif event.key == pygame.K_c:
-                    # Add or remove a control
-                    circuit_grid.handle_input_ctrl()
-                elif event.key == pygame.K_UP:
-                    # Move a control qubit up
-                    circuit_grid.handle_input_move_ctrl(MOVE_UP)
-                elif event.key == pygame.K_DOWN:
-                    # Move a control qubit down
-                    circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
-                elif event.key == pygame.K_LEFT:
-                    # Rotate a gate
-                    circuit_grid.handle_input_rotate(-np.pi / 8)
-                elif event.key == pygame.K_RIGHT:
-                    # Rotate a gate
-                    circuit_grid.handle_input_rotate(np.pi / 8)
-
-        ball.update()
-
-        if ball.rect.x < 0:
-            quantum_computer.score += 1
-            ball.reset(1)
-        elif ball.rect.x > parameters.WINDOW_WIDTH:
-            classical_computer.score += 1
-            ball.reset(-1)
-
-        classical_computer.update(ball)
-        quantum_computer.update(ball)
-
-        if pygame.sprite.collide_mask(ball, left_paddle) or \
-            pygame.sprite.collide_mask(ball, right_paddles.paddles[quantum_computer.measured_state]):
-            ball.bounce()
-
+        scene_manager.update()
         # draw game
-        screen.fill(colors.BLACK)
-        draw_statevector_grid(screen)
-        draw_score(classical_computer.score, quantum_computer.score, screen)
-        draw_dashed_line(screen)
-        circuit_grid.draw(screen)
-        moving_sprites.draw(screen)
-        pygame.display.flip()
+        scene_manager.draw(screen)
 
         clock.tick(60)
 
