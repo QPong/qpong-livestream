@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 
 from assets.circuit_grid import CircuitGrid, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
-from assets.hud import draw_statevector_grid
+from assets.ui import draw_statevector_grid, draw_score, draw_dashed_line
 from assets.paddle import Paddle, QuantumPaddles
 from assets.ball import Ball
 from assets.player import ClassicalComputer, QuantumComputer
@@ -90,6 +90,8 @@ def main():
         # draw game
         screen.fill(colors.BLACK)
         draw_statevector_grid(screen)
+        draw_score(classical_computer.score, quantum_computer.score, screen)
+        draw_dashed_line(screen)
         circuit_grid.draw(screen)
         moving_sprites.draw(screen)
         pygame.display.flip()
