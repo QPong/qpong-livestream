@@ -13,8 +13,10 @@ def main():
     # initialize game
     circuit_grid = CircuitGrid(5, round(globals.FIELD_HEIGHT))
     classical_paddle = paddle.Paddle()
+    quantum_paddles = paddle.QuantumPaddles(globals.WINDOW_WIDTH - 9 * globals.WIDTH_UNIT)
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(classical_paddle)
+    moving_sprites.add(quantum_paddles.paddles)
 
     exit = False
     # main game loop
@@ -27,6 +29,7 @@ def main():
                 circuit_grid.handle_input(event.key)
 
         # draw game
+        screen.fill(globals.BLACK)
         ui.draw_statevector_grid(screen)
         circuit_grid.draw(screen)
         moving_sprites.draw(screen)
