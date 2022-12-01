@@ -1,7 +1,6 @@
 import pygame
 
-from assets import paddle
-from assets.paddle import Paddle
+from assets import paddle, ball, globals
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 750))
@@ -12,9 +11,11 @@ def main():
 
     # initialize game
     exit = False
-    classical_paddle = Paddle()
+    classical_paddle = paddle.Paddle(x_pos=50, y_pos=40)
+    pong_ball = ball.Ball()
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(classical_paddle)
+    moving_sprites.add(pong_ball)
 
     while not exit:
         # update game
@@ -22,7 +23,10 @@ def main():
             if event.type == pygame.QUIT:
                 exit = True
 
+        pong_ball.update()
+
         # draw game
+        screen.fill(globals.BLACK)
         moving_sprites.draw(screen)
         pygame.display.flip()
 
