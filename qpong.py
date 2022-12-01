@@ -1,6 +1,6 @@
 import pygame
 
-from assets import paddle, ball, globals, computer
+from assets import paddle, ball, globals, computer, ui
 
 pygame.init()
 screen = pygame.display.set_mode((1200, 750))
@@ -32,6 +32,7 @@ def main():
         # draw game
         screen.fill(globals.BLACK)
         moving_sprites.draw(screen)
+        ui.draw_statevector_grid(screen)
         pygame.display.flip()
 
         # control framerate
