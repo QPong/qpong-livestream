@@ -25,6 +25,7 @@ class GameScene(Scene):
         self.moving_sprites.add(self.right_paddles.paddles)
         self.moving_sprites.add(self.ball)
 
+
     def update(self, sm):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -32,39 +33,8 @@ class GameScene(Scene):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     sm.exit = True
-                elif event.key == pygame.K_a:
-                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_LEFT)
-                elif event.key == pygame.K_d:
-                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_RIGHT)
-                elif event.key == pygame.K_w:
-                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_UP)
-                elif event.key == pygame.K_s:
-                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_DOWN)
-                elif event.key == pygame.K_x:
-                    self.circuit_grid.handle_input_x()
-                elif event.key == pygame.K_y:
-                    self.circuit_grid.handle_input_y()
-                elif event.key == pygame.K_z:
-                    self.circuit_grid.handle_input_z()
-                elif event.key == pygame.K_h:
-                    self.circuit_grid.handle_input_h()
-                elif event.key == pygame.K_SPACE:
-                    self.circuit_grid.handle_input_delete()
-                elif event.key == pygame.K_c:
-                    # Add or remove a control
-                    self.circuit_grid.handle_input_ctrl()
-                elif event.key == pygame.K_UP:
-                    # Move a control qubit up
-                    self.circuit_grid.handle_input_move_ctrl(circuit_grid.MOVE_UP)
-                elif event.key == pygame.K_DOWN:
-                    # Move a control qubit down
-                    self.circuit_grid.handle_input_move_ctrl(circuit_grid.MOVE_DOWN)
-                elif event.key == pygame.K_LEFT:
-                    # Rotate a gate
-                    self.circuit_grid.handle_input_rotate(-np.pi / 8)
-                elif event.key == pygame.K_RIGHT:
-                    # Rotate a gate
-                    self.circuit_grid.handle_input_rotate(np.pi / 8)
+                else: 
+                    self.circuit_grid.handle_input(event.key)
 
         self.ball.update()
 
@@ -108,7 +78,7 @@ class WinScene(Scene):
                     sm.exit = True
                 elif event.key == pygame.K_SPACE:
                     sm.push(GameScene())
-    
+
     def draw(self, sm, screen):
         font = resources.Font()
         
