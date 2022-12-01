@@ -1,4 +1,3 @@
-import numpy as np
 import pygame
 
 from . import globals, circuit_grid, ui, paddle, ball, computer, resources
@@ -82,18 +81,18 @@ class WinScene(Scene):
     def draw(self, sm, screen):
         font = resources.Font()
         
-        gameover_text = "Congratulations!"
-        text = font.gameover_font.render(gameover_text, 5, globals.WHITE)
+        text_string = "Congratulations!"
+        text = font.gameover_font.render(text_string, 5, globals.WHITE)
         text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 10))
         screen.blit(text, text_pos)
 
-        gameover_text = "You demonstrated quantum supremacy"
-        text = font.replay_font.render(gameover_text, 5, globals.WHITE)
+        text_string = "You demonstrated quantum supremacy"
+        text = font.replay_font.render(text_string, 5, globals.WHITE)
         text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 22))
         screen.blit(text, text_pos)
 
-        gameover_text = "for the first time in human history!"
-        text = font.replay_font.render(gameover_text, 5, globals.WHITE)
+        text_string = "for the first time in human history!"
+        text = font.replay_font.render(text_string, 5, globals.WHITE)
         text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 27))
         screen.blit(text, text_pos)
 
