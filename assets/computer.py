@@ -1,5 +1,4 @@
 import pygame
-
 import qiskit
 
 from . import globals
