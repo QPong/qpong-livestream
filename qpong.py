@@ -1,7 +1,7 @@
 import pygame
 
 from assets.circuit_grid import CircuitGrid
-from assets import globals
+from assets import globals, ui
 
 pygame.init()
 screen = pygame.display.set_mode((globals.WINDOW_WIDTH, globals.WINDOW_HEIGHT))
@@ -24,6 +24,7 @@ def main():
                 circuit_grid.handle_input(event.key)
 
         # draw game
+        ui.draw_statevector_grid(screen)
         circuit_grid.draw(screen)
         pygame.display.flip()
 
