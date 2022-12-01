@@ -1,12 +1,9 @@
 import pygame
 
-from .resources import Font
-from . import parameters
-from . import colors
-
+from . import globals, resources
 
 def draw_statevector_grid(screen):
-    font = Font()
+    font = resources.Font()
     basis_states = [
         '|000>',
         '|001>',
@@ -17,39 +14,39 @@ def draw_statevector_grid(screen):
         '|110>',
         '|111>'
     ]
-    block_size = int(round(parameters.SCREEN_HEIGHT / len(basis_states)))
+    block_size = int(round(globals.SCREEN_HEIGHT / len(basis_states)))
 
     for i in range(len(basis_states)):
-        text = font.vector_font.render(basis_states[i], 1, colors.WHITE)
-        screen.blit(text, (parameters.WINDOW_WIDTH - text.get_width(), 
+        text = font.vector_font.render(basis_states[i], 1, globals.WHITE)
+        screen.blit(text, (globals.WINDOW_WIDTH - text.get_width(), 
                             i*block_size + text.get_height()))
 
 
 def draw_score(score1, score2, screen):
-    font = Font()
+    font = resources.Font()
     
-    text = font.player_font.render("Classical Computer", 1, colors.GRAY)
-    text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH*0.3, parameters.WIDTH_UNIT*2))
+    text = font.player_font.render("Classical Computer", 1, globals.GRAY)
+    text_pos = text.get_rect(center=(globals.WINDOW_WIDTH*0.3, globals.WIDTH_UNIT*2))
     screen.blit(text, text_pos)
     
-    text = font.score_font.render(str(score1), 1, colors.GRAY)
-    text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH*0.3, parameters.WIDTH_UNIT*8))
+    text = font.score_font.render(str(score1), 1, globals.GRAY)
+    text_pos = text.get_rect(center=(globals.WINDOW_WIDTH*0.3, globals.WIDTH_UNIT*8))
     screen.blit(text, text_pos)
     
-    text = font.player_font.render("Quantum Computer", 1, colors.GRAY)
-    text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH*0.7, parameters.WIDTH_UNIT*2))
+    text = font.player_font.render("Quantum Computer", 1, globals.GRAY)
+    text_pos = text.get_rect(center=(globals.WINDOW_WIDTH*0.7, globals.WIDTH_UNIT*2))
     screen.blit(text, text_pos)
     
-    text = font.score_font.render(str(score2), 1, colors.GRAY)
-    text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH*0.7, parameters.WIDTH_UNIT*8))
+    text = font.score_font.render(str(score2), 1, globals.GRAY)
+    text_pos = text.get_rect(center=(globals.WINDOW_WIDTH*0.7, globals.WIDTH_UNIT*8))
     screen.blit(text, text_pos)
 
 
 def draw_dashed_line(screen):
-    for i in range(10, parameters.SCREEN_HEIGHT, 2 * parameters.WIDTH_UNIT): 
+    for i in range(10, globals.SCREEN_HEIGHT, 2 * globals.WIDTH_UNIT): 
         pygame.draw.rect(
             screen,
-            colors.GRAY,
-            (parameters.WINDOW_WIDTH // 2 - 5, i, 0.5 * parameters.WIDTH_UNIT, parameters.WIDTH_UNIT),
+            globals.GRAY,
+            (globals.WINDOW_WIDTH // 2 - 5, i, 0.5 * globals.WIDTH_UNIT, globals.WIDTH_UNIT),
             0,
         )

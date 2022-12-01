@@ -1,13 +1,7 @@
+import numpy as np
 import pygame
 
-from assets.circuit_grid import CircuitGrid, MOVE_UP, MOVE_DOWN, MOVE_LEFT, MOVE_RIGHT
-from assets.ui import draw_statevector_grid, draw_score, draw_dashed_line
-from assets.paddle import Paddle, QuantumPaddles
-from assets.ball import Ball
-from assets.player import ClassicalComputer, QuantumComputer
-from assets.resources import Font
-from assets import colors
-from assets import parameters
+from . import globals, circuit_grid, ui, paddle, ball, computer, resources
 
 class Scene:
     def __init__(self) -> None:
@@ -20,12 +14,12 @@ class Scene:
 class GameScene(Scene):
     def __init__(self):
         super().__init__()
-        self.circuit_grid = CircuitGrid(5, round(750*0.7))
-        self.left_paddle = Paddle(9 * parameters.WIDTH_UNIT)
-        self.classical_computer = ClassicalComputer(self.left_paddle)
-        self.right_paddles = QuantumPaddles(parameters.WINDOW_WIDTH - 9 * parameters.WIDTH_UNIT)
-        self.quantum_computer = QuantumComputer(self.right_paddles, self.circuit_grid) 
-        self.ball = Ball()
+        self.circuit_grid = circuit_grid.CircuitGrid(5, round(750*0.7))
+        self.left_paddle = paddle.Paddle(9 * globals.WIDTH_UNIT)
+        self.classical_computer = computer.ClassicalComputer(self.left_paddle)
+        self.right_paddles = paddle.QuantumPaddles(globals.WINDOW_WIDTH - 9 * globals.WIDTH_UNIT)
+        self.quantum_computer = computer.QuantumComputer(self.right_paddles, self.circuit_grid) 
+        self.ball = ball.Ball()
         self.moving_sprites = pygame.sprite.Group()
         self.moving_sprites.add(self.left_paddle)
         self.moving_sprites.add(self.right_paddles.paddles)
@@ -39,13 +33,13 @@ class GameScene(Scene):
                 if event.key == pygame.K_ESCAPE:
                     sm.exit = True
                 elif event.key == pygame.K_a:
-                    self.circuit_grid.move_to_adjacent_node(MOVE_LEFT)
+                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_LEFT)
                 elif event.key == pygame.K_d:
-                    self.circuit_grid.move_to_adjacent_node(MOVE_RIGHT)
+                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_RIGHT)
                 elif event.key == pygame.K_w:
-                    self.circuit_grid.move_to_adjacent_node(MOVE_UP)
+                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_UP)
                 elif event.key == pygame.K_s:
-                    self.circuit_grid.move_to_adjacent_node(MOVE_DOWN)
+                    self.circuit_grid.move_to_adjacent_node(circuit_grid.MOVE_DOWN)
                 elif event.key == pygame.K_x:
                     self.circuit_grid.handle_input_x()
                 elif event.key == pygame.K_y:
@@ -61,10 +55,10 @@ class GameScene(Scene):
                     self.circuit_grid.handle_input_ctrl()
                 elif event.key == pygame.K_UP:
                     # Move a control qubit up
-                    self.circuit_grid.handle_input_move_ctrl(MOVE_UP)
+                    self.circuit_grid.handle_input_move_ctrl(circuit_grid.MOVE_UP)
                 elif event.key == pygame.K_DOWN:
                     # Move a control qubit down
-                    self.circuit_grid.handle_input_move_ctrl(MOVE_DOWN)
+                    self.circuit_grid.handle_input_move_ctrl(circuit_grid.MOVE_DOWN)
                 elif event.key == pygame.K_LEFT:
                     # Rotate a gate
                     self.circuit_grid.handle_input_rotate(-np.pi / 8)
@@ -77,7 +71,7 @@ class GameScene(Scene):
         if self.ball.rect.x < 0:
             self.quantum_computer.score += 1
             self.ball.reset(1)
-        elif self.ball.rect.x > parameters.WINDOW_WIDTH:
+        elif self.ball.rect.x > globals.WINDOW_WIDTH:
             self.classical_computer.score += 1
             self.ball.reset(-1)
 
@@ -89,15 +83,15 @@ class GameScene(Scene):
             self.ball.bounce()
 
         # check winner
-        if self.quantum_computer.score >= parameters.WIN_SCORE:
+        if self.quantum_computer.score >= globals.WIN_SCORE:
             sm.push(WinScene())
-        elif self.classical_computer.score >= parameters.WIN_SCORE:
+        elif self.classical_computer.score >= globals.WIN_SCORE:
             sm.push(LoseScene())
 
     def draw(self, sm, screen):
-        draw_statevector_grid(screen)
-        draw_score(self.classical_computer.score, self.quantum_computer.score, screen)
-        draw_dashed_line(screen)
+        ui.draw_statevector_grid(screen)
+        ui.draw_score(self.classical_computer.score, self.quantum_computer.score, screen)
+        ui.draw_dashed_line(screen)
         self.circuit_grid.draw(screen)
         self.moving_sprites.draw(screen)
 
@@ -116,21 +110,21 @@ class WinScene(Scene):
                     sm.push(GameScene())
     
     def draw(self, sm, screen):
-        font = Font()
+        font = resources.Font()
         
         gameover_text = "Congratulations!"
-        text = font.gameover_font.render(gameover_text, 5, colors.WHITE)
-        text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH / 2, parameters.WIDTH_UNIT * 10))
+        text = font.gameover_font.render(gameover_text, 5, globals.WHITE)
+        text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 10))
         screen.blit(text, text_pos)
 
         gameover_text = "You demonstrated quantum supremacy"
-        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
-        text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH / 2, parameters.WIDTH_UNIT * 22))
+        text = font.replay_font.render(gameover_text, 5, globals.WHITE)
+        text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 22))
         screen.blit(text, text_pos)
 
         gameover_text = "for the first time in human history!"
-        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
-        text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH / 2, parameters.WIDTH_UNIT * 27))
+        text = font.replay_font.render(gameover_text, 5, globals.WHITE)
+        text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 27))
         screen.blit(text, text_pos)
 
 class LoseScene(Scene):
@@ -148,21 +142,21 @@ class LoseScene(Scene):
                     sm.push(GameScene())
 
     def draw(self, sm, screen):
-        font = Font()
+        font = resources.Font()
 
         gameover_text = "Game Over"
-        text = font.gameover_font.render(gameover_text, 1, colors.WHITE)
-        text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH / 2, parameters.WIDTH_UNIT * 10))
+        text = font.gameover_font.render(gameover_text, 1, globals.WHITE)
+        text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 10))
         screen.blit(text, text_pos)
 
         gameover_text = "Classical computer"
-        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
-        text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH / 2, parameters.WIDTH_UNIT * 22))
+        text = font.replay_font.render(gameover_text, 5, globals.WHITE)
+        text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 22))
         screen.blit(text, text_pos)
 
         gameover_text = "still rules the world"
-        text = font.replay_font.render(gameover_text, 5, colors.WHITE)
-        text_pos = text.get_rect(center=(parameters.WINDOW_WIDTH / 2, parameters.WIDTH_UNIT * 27))
+        text = font.replay_font.render(gameover_text, 5, globals.WHITE)
+        text_pos = text.get_rect(center=(globals.WINDOW_WIDTH / 2, globals.WIDTH_UNIT * 27))
         screen.blit(text, text_pos)
     
 class SceneManager:
@@ -173,7 +167,7 @@ class SceneManager:
         if len(self.scenes) > 0:
             self.scenes[-1].update(self)
     def draw(self, screen):
-        screen.fill(colors.BLACK)
+        screen.fill(globals.BLACK)
         if len(self.scenes) > 0:
             self.scenes[-1].draw(self, screen)
         pygame.display.flip()

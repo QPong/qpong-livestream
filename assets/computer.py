@@ -2,7 +2,7 @@ import pygame
 
 import qiskit
 
-from . import parameters
+from . import globals
 
 class Computer:
     def __init__(self) -> None:
@@ -27,14 +27,14 @@ class QuantumComputer(Computer):
         self.score = 0
         self.circuit_grid = circuit_grid
         self.measured_state = 0
-        self.last_measurement_time = pygame.time.get_ticks() - parameters.MEASUREMENT_COOLDOWN_TIME
+        self.last_measurement_time = pygame.time.get_ticks() - globals.MEASUREMENT_COOLDOWN_TIME
     
     def update(self, ball):
         current_time = pygame.time.get_ticks()
-        if 8 * parameters.WIDTH_UNIT \
-            < parameters.WINDOW_WIDTH - ball.rect.x \
-            < 12 * parameters.WIDTH_UNIT:
-            if current_time - self.last_measurement_time > parameters.MEASUREMENT_COOLDOWN_TIME:
+        if 8 * globals.WIDTH_UNIT \
+            < globals.WINDOW_WIDTH - ball.rect.x \
+            < 12 * globals.WIDTH_UNIT:
+            if current_time - self.last_measurement_time > globals.MEASUREMENT_COOLDOWN_TIME:
                 self.update_paddle_after_measurement()
                 self.last_measurement_time = pygame.time.get_ticks()
         else:

@@ -2,7 +2,8 @@ import os
 
 import pygame
 from pygame.constants import RLEACCEL
-from .parameters import WIDTH_UNIT
+
+from . import globals
 
 data_dir = os.path.split(os.path.abspath(__file__))[0]
 
@@ -16,7 +17,7 @@ def load_image(name, colorkey=None):
     return image, image.get_rect()
 
 
-def load_font(name, size=2 * WIDTH_UNIT):
+def load_font(name, size=2 * globals.WIDTH_UNIT):
     if not pygame.font.get_init():
         pygame.font.init()
 
@@ -26,9 +27,9 @@ def load_font(name, size=2 * WIDTH_UNIT):
 
 class Font:
     def __init__(self):
-        self.gameover_font = load_font("bit5x3.ttf", 10 * WIDTH_UNIT)
-        self.credit_font = load_font("bit5x3.ttf", 2 * WIDTH_UNIT)
-        self.replay_font = load_font("bit5x3.ttf", 5 * WIDTH_UNIT)
-        self.score_font = load_font("bit5x3.ttf", 12 * WIDTH_UNIT)
-        self.vector_font = load_font("bit5x3.ttf", 3 * WIDTH_UNIT)
-        self.player_font = load_font("bit5x3.ttf", 3 * WIDTH_UNIT)
+        self.gameover_font = load_font("bit5x3.ttf", 10 * globals.WIDTH_UNIT)
+        self.credit_font = load_font("bit5x3.ttf", 2 * globals.WIDTH_UNIT)
+        self.replay_font = load_font("bit5x3.ttf", 5 * globals.WIDTH_UNIT)
+        self.score_font = load_font("bit5x3.ttf", 12 * globals.WIDTH_UNIT)
+        self.vector_font = load_font("bit5x3.ttf", 3 * globals.WIDTH_UNIT)
+        self.player_font = load_font("bit5x3.ttf", 3 * globals.WIDTH_UNIT)

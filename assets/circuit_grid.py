@@ -1,13 +1,8 @@
 import numpy as np
-
 import pygame
+import qiskit
 
-from qiskit import QuantumCircuit, QuantumRegister
-
-from .parameters import NUM_QUBITS
-from .resources import load_image
-from . import circuit_node_types as node_types
-from . import colors
+from . import globals, resources, node_types
 
 GRID_WIDTH = 66
 GRID_HEIGHT = 66
@@ -30,7 +25,7 @@ class CircuitGrid(pygame.sprite.RenderPlain):
         self.ypos = ypos
         self.selected_wire = 0
         self.selected_column = 0
-        self.model = CircuitGridModel(NUM_QUBITS,16)
+        self.model = CircuitGridModel(globals.NUM_QUBITS,16)
         self.circuit_grid_background = CircuitGridBackground(self.model)
         self.circuit_grid_cursor = CircuitGridCursor()
         self.gate_tiles = np.empty((self.model.max_wires,
@@ -266,12 +261,12 @@ class CircuitGridBackground(pygame.sprite.Sprite):
         self.image = pygame.Surface([GRID_WIDTH * (circuit_grid_model.max_columns + 2),
                                      GRID_HEIGHT * (circuit_grid_model.max_wires + 1)])
         self.image.convert()
-        self.image.fill(colors.WHITE)
+        self.image.fill(globals.WHITE)
         self.rect = self.image.get_rect()
-        pygame.draw.rect(self.image, colors.BLACK, self.rect, LINE_WIDTH)
+        pygame.draw.rect(self.image, globals.BLACK, self.rect, LINE_WIDTH)
 
         for wire_num in range(circuit_grid_model.max_wires):
-            pygame.draw.line(self.image, colors.BLACK,
+            pygame.draw.line(self.image, globals.BLACK,
                              (GRID_WIDTH * 0.5, (wire_num + 1) * GRID_HEIGHT),
                              (self.rect.width - (GRID_WIDTH * 0.5), (wire_num + 1) * GRID_HEIGHT),
                              LINE_WIDTH)
@@ -291,59 +286,59 @@ class CircuitGridGate(pygame.sprite.Sprite):
         node_type = self.circuit_grid_model.get_node_gate_part(self.wire_num, self.column_num)
 
         if node_type == node_types.H:
-            self.image, self.rect = load_image('gates/h_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/h_gate.png', -1)
         elif node_type == node_types.X:
             node = self.circuit_grid_model.get_node(self.wire_num, self.column_num)
             if node.ctrl_a >= 0 or node.ctrl_b >= 0:
                 if self.wire_num > max(node.ctrl_a, node.ctrl_b):
-                    self.image, self.rect = load_image('gates/not_gate_below_ctrl.png', -1)
+                    self.image, self.rect = resources.load_image('gates/not_gate_below_ctrl.png', -1)
                 else:
-                    self.image, self.rect = load_image('gates/not_gate_above_ctrl.png', -1)
+                    self.image, self.rect = resources.load_image('gates/not_gate_above_ctrl.png', -1)
             elif node.radians != 0:
-                self.image, self.rect = load_image('gates/rx_gate.png', -1)
+                self.image, self.rect = resources.load_image('gates/rx_gate.png', -1)
                 self.rect = self.image.get_rect()
-                pygame.draw.arc(self.image, colors.MAGENTA, self.rect, 0, node.radians % (2 * np.pi), 6)
-                pygame.draw.arc(self.image, colors.MAGENTA, self.rect, node.radians % (2 * np.pi), 2 * np.pi, 1)
+                pygame.draw.arc(self.image, globals.MAGENTA, self.rect, 0, node.radians % (2 * np.pi), 6)
+                pygame.draw.arc(self.image, globals.MAGENTA, self.rect, node.radians % (2 * np.pi), 2 * np.pi, 1)
             else:
-                self.image, self.rect = load_image('gates/x_gate.png', -1)
+                self.image, self.rect = resources.load_image('gates/x_gate.png', -1)
         elif node_type == node_types.Y:
             node = self.circuit_grid_model.get_node(self.wire_num, self.column_num)
             if node.radians != 0:
-                self.image, self.rect = load_image('gates/ry_gate.png', -1)
+                self.image, self.rect = resources.load_image('gates/ry_gate.png', -1)
                 self.rect = self.image.get_rect()
-                pygame.draw.arc(self.image, colors.MAGENTA, self.rect, 0, node.radians % (2 * np.pi), 6)
-                pygame.draw.arc(self.image, colors.MAGENTA, self.rect, node.radians % (2 * np.pi), 2 * np.pi, 1)
+                pygame.draw.arc(self.image, globals.MAGENTA, self.rect, 0, node.radians % (2 * np.pi), 6)
+                pygame.draw.arc(self.image, globals.MAGENTA, self.rect, node.radians % (2 * np.pi), 2 * np.pi, 1)
             else:
-                self.image, self.rect = load_image('gates/y_gate.png', -1)
+                self.image, self.rect = resources.load_image('gates/y_gate.png', -1)
         elif node_type == node_types.Z:
             node = self.circuit_grid_model.get_node(self.wire_num, self.column_num)
             if node.radians != 0:
-                self.image, self.rect = load_image('gates/rz_gate.png', -1)
+                self.image, self.rect = resources.load_image('gates/rz_gate.png', -1)
                 self.rect = self.image.get_rect()
-                pygame.draw.arc(self.image, colors.MAGENTA, self.rect, 0, node.radians % (2 * np.pi), 6)
-                pygame.draw.arc(self.image, colors.MAGENTA, self.rect, node.radians % (2 * np.pi), 2 * np.pi, 1)
+                pygame.draw.arc(self.image, globals.MAGENTA, self.rect, 0, node.radians % (2 * np.pi), 6)
+                pygame.draw.arc(self.image, globals.MAGENTA, self.rect, node.radians % (2 * np.pi), 2 * np.pi, 1)
             else:
-                self.image, self.rect = load_image('gates/z_gate.png', -1)
+                self.image, self.rect = resources.load_image('gates/z_gate.png', -1)
         elif node_type == node_types.S:
-            self.image, self.rect = load_image('gates/s_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/s_gate.png', -1)
         elif node_type == node_types.SDG:
-            self.image, self.rect = load_image('gates/sdg_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/sdg_gate.png', -1)
         elif node_type == node_types.T:
-            self.image, self.rect = load_image('gates/t_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/t_gate.png', -1)
         elif node_type == node_types.TDG:
-            self.image, self.rect = load_image('gates/tdg_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/tdg_gate.png', -1)
         elif node_type == node_types.IDEN:
-            self.image, self.rect = load_image('gates/iden_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/iden_gate.png', -1)
         elif node_type == node_types.CTRL:
             if self.wire_num > \
                     self.circuit_grid_model.get_gate_wire_for_control_node(self.wire_num, self.column_num):
-                self.image, self.rect = load_image('gates/ctrl_gate_bottom_wire.png', -1)
+                self.image, self.rect = resources.load_image('gates/ctrl_gate_bottom_wire.png', -1)
             else:
-                self.image, self.rect = load_image('gates/ctrl_gate_top_wire.png', -1)
+                self.image, self.rect = resources.load_image('gates/ctrl_gate_top_wire.png', -1)
         elif node_type == node_types.TRACE:
-            self.image, self.rect = load_image('gates/trace_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/trace_gate.png', -1)
         elif node_type == node_types.SWAP:
-            self.image, self.rect = load_image('gates/swap_gate.png', -1)
+            self.image, self.rect = resources.load_image('gates/swap_gate.png', -1)
         else:
             self.image = pygame.Surface([GATE_TILE_WIDTH, GATE_TILE_HEIGHT])
             self.image.set_alpha(0)
@@ -356,7 +351,7 @@ class CircuitGridCursor(pygame.sprite.Sprite):
     """Cursor to highlight current grid node"""
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image, self.rect = load_image('circuit-grid-cursor.png')
+        self.image, self.rect = resources.load_image('circuit-grid-cursor.png')
         self.image.convert_alpha()
 
 
@@ -423,8 +418,8 @@ class CircuitGridModel():
         return gate_wire_num
 
     def compute_circuit(self):
-        qr = QuantumRegister(self.max_wires, 'q')
-        qc = QuantumCircuit(qr)
+        qr = qiskit.QuantumRegister(self.max_wires, 'q')
+        qc = qiskit.QuantumCircuit(qr)
 
         for column_num in range(self.max_columns):
             for wire_num in range(self.max_wires):
