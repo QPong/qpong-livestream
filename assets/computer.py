@@ -8,6 +8,7 @@ class Computer:
         pass
     def update(self):
         pass
+
 class ClassicalComputer(Computer):
     def __init__(self, paddle) -> None:
         self.paddle = paddle

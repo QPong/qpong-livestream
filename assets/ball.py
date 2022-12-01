@@ -18,12 +18,12 @@ class Ball(pygame.sprite.Sprite):
         self.rect.x += self.velocity[0]
         self.rect.y += self.velocity[1]
 
-        if self.rect.y < 0 or self.rect.y > globals.SCREEN_HEIGHT:
+        if self.rect.y < 0 or self.rect.y > globals.FIELD_HEIGHT:
             self.velocity[1] = -self.velocity[1]
 
     def reset(self, direction):
         self.rect.centerx = globals.WINDOW_WIDTH / 2
-        self.rect.centery = globals.SCREEN_HEIGHT / 2
+        self.rect.centery = globals.FIELD_HEIGHT / 2
 
         if direction > 0:
             self.velocity = [random.randint(2,4), random.randint(-4,4)] * self.initial_speed

@@ -1,9 +1,9 @@
 import pygame
 
-from assets import scene
+from assets import globals, scene
 
 pygame.init()
-screen = pygame.display.set_mode((1200, 750))
+screen = pygame.display.set_mode((globals.WINDOW_WIDTH, globals.WINDOW_HEIGHT))
 pygame.display.set_caption('QPong')
 clock = pygame.time.Clock()
 

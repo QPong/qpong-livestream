@@ -6,10 +6,8 @@ from . import globals, resources, node_types
 
 GRID_WIDTH = 66
 GRID_HEIGHT = 66
-
 GATE_TILE_WIDTH = 43
 GATE_TILE_HEIGHT = 45
-
 LINE_WIDTH = 1
 
 # navigation

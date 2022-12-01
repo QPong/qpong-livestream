@@ -14,7 +14,7 @@ def draw_statevector_grid(screen):
         '|110>',
         '|111>'
     ]
-    block_size = int(round(globals.SCREEN_HEIGHT / len(basis_states)))
+    block_size = int(round(globals.FIELD_HEIGHT / len(basis_states)))
 
     for i in range(len(basis_states)):
         text = font.vector_font.render(basis_states[i], 1, globals.WHITE)
@@ -43,7 +43,7 @@ def draw_score(score1, score2, screen):
 
 
 def draw_dashed_line(screen):
-    for i in range(10, globals.SCREEN_HEIGHT, 2 * globals.WIDTH_UNIT): 
+    for i in range(10, globals.FIELD_HEIGHT, 2 * globals.WIDTH_UNIT): 
         pygame.draw.rect(
             screen,
             globals.GRAY,
