@@ -1,7 +1,7 @@
 import pygame
 
 from assets.circuit_grid import CircuitGrid
-from assets import globals, ui
+from assets import globals, ui, paddle
 
 pygame.init()
 screen = pygame.display.set_mode((globals.WINDOW_WIDTH, globals.WINDOW_HEIGHT))
@@ -12,6 +12,9 @@ def main():
 
     # initialize game
     circuit_grid = CircuitGrid(5, round(globals.FIELD_HEIGHT))
+    classical_paddle = paddle.Paddle()
+    moving_sprites = pygame.sprite.Group()
+    moving_sprites.add(classical_paddle)
 
     exit = False
     # main game loop
@@ -26,6 +29,7 @@ def main():
         # draw game
         ui.draw_statevector_grid(screen)
         circuit_grid.draw(screen)
+        moving_sprites.draw(screen)
         pygame.display.flip()
 
         # frame
