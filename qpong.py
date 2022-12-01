@@ -13,9 +13,11 @@ def main():
     exit = False
     classical_paddle = paddle.Paddle(x_pos=50, y_pos=40)
     classical_computer = computer.ClassicalComputer(classical_paddle)
+    quantum_paddles = paddle.QuantumPaddles(x_pos=globals.WINDOW_WIDTH - 9*globals.WIDTH_UNIT)
     pong_ball = ball.Ball()
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(classical_paddle)
+    moving_sprites.add(quantum_paddles.paddles)
     moving_sprites.add(pong_ball)
 
     while not exit:
