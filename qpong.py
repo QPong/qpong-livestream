@@ -1,20 +1,22 @@
 import pygame
 
 from assets.circuit_grid import CircuitGrid
-from assets import ui, paddle
+from assets import globals, ui, paddle
 
 pygame.init()
-screen = pygame.display.set_mode((1200, 750))
+screen = pygame.display.set_mode((globals.WINDOW_WIDTH, globals.WINDOW_HEIGHT))
 pygame.display.set_caption('QPong')
 clock = pygame.time.Clock()
 
 def main():
 
     # initialize game
-    circuit_grid = CircuitGrid(5, round(750*0.7))
-    classical_paddle = paddle.Paddle()
+    circuit_grid = CircuitGrid(5, globals.FIELD_HEIGHT)
+    classical_paddle = paddle.Paddle(9*globals.WIDTH_UNIT)
+    quantum_paddles = paddle.QuantumPaddles(globals.WINDOW_WIDTH - 9*globals.WIDTH_UNIT)
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(classical_paddle)
+    moving_sprites.add(quantum_paddles.paddles)
 
     exit = False
     while not exit:
