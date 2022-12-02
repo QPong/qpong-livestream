@@ -1,7 +1,7 @@
 import pygame
 
 from assets.circuit_grid import CircuitGrid
-from assets import globals, ui, paddle, ball
+from assets import globals, ui, paddle, ball, computer
 
 pygame.init()
 screen = pygame.display.set_mode((globals.WINDOW_WIDTH, globals.WINDOW_HEIGHT))
@@ -13,6 +13,7 @@ def main():
     # initialize game
     circuit_grid = CircuitGrid(5, globals.FIELD_HEIGHT)
     classical_paddle = paddle.Paddle(9*globals.WIDTH_UNIT)
+    classical_computer = computer.ClassicalComputer(classical_paddle)
     quantum_paddles = paddle.QuantumPaddles(globals.WINDOW_WIDTH - 9*globals.WIDTH_UNIT)
     pong_ball = ball.Ball()
     moving_sprites = pygame.sprite.Group()
@@ -30,6 +31,7 @@ def main():
                 circuit_grid.handle_input(event.key)
 
         pong_ball.update()
+        classical_computer.update(pong_ball)
 
         # draw game
         screen.fill(globals.BLACK)
