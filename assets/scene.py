@@ -3,7 +3,7 @@ import pygame
 from . import globals, circuit_grid, ui, paddle, ball, computer, resources
 
 class Scene:
-    def __init__(self) -> None:
+    def __init__(self):
         pass
     def update(self, sm):
         pass
@@ -23,7 +23,6 @@ class GameScene(Scene):
         self.moving_sprites.add(self.left_paddle)
         self.moving_sprites.add(self.right_paddles.paddles)
         self.moving_sprites.add(self.ball)
-
 
     def update(self, sm):
         for event in pygame.event.get():
@@ -65,7 +64,7 @@ class GameScene(Scene):
         self.moving_sprites.draw(screen)
 
 class WinScene(Scene):
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
     
     def update(self, sm):
@@ -97,7 +96,7 @@ class WinScene(Scene):
         screen.blit(text, text_pos)
 
 class LoseScene(Scene):
-    def __init__(self) -> None:
+    def __init__(self):
         pass
 
     def update(self, sm):
@@ -129,7 +128,7 @@ class LoseScene(Scene):
         screen.blit(text, text_pos)
     
 class SceneManager:
-    def __init__(self) -> None:
+    def __init__(self):
         self.scenes = []
         self.exit = False
     def update(self):

@@ -18,7 +18,7 @@ def main():
         scene_manager.update()
         # draw game
         scene_manager.draw(screen)
-
+        # control framerate
         clock.tick(60)
 
 if __name__ == '__main__':

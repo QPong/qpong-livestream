@@ -4,7 +4,7 @@ import pygame
 from . import globals
 
 class Ball(pygame.sprite.Sprite):
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
 
         self.image = pygame.Surface([globals.WIDTH_UNIT, globals.WIDTH_UNIT])

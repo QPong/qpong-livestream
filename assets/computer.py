@@ -4,13 +4,13 @@ import qiskit
 from . import globals
 
 class Computer:
-    def __init__(self) -> None:
+    def __init__(self):
         pass
     def update(self):
         pass
 
 class ClassicalComputer(Computer):
-    def __init__(self, paddle) -> None:
+    def __init__(self, paddle):
         self.paddle = paddle
         self.score = 0
         self.speed = 3
@@ -22,7 +22,7 @@ class ClassicalComputer(Computer):
             self.paddle.rect.y += self.speed
 
 class QuantumComputer(Computer):
-    def __init__(self, quantum_paddle, circuit_grid) -> None:
+    def __init__(self, quantum_paddle, circuit_grid):
         self.paddles = quantum_paddle.paddles 
         self.score = 0
         self.circuit_grid = circuit_grid
@@ -48,8 +48,6 @@ class QuantumComputer(Computer):
 
         for basis_state, amplitude in enumerate(statevector):
             self.paddles[basis_state].image.set_alpha(abs(amplitude)**2*255)
-        
-        return None
 
     def update_paddle_after_measurement(self):
         simulator = qiskit.BasicAer.get_backend("qasm_simulator")
