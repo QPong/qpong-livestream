@@ -11,9 +11,11 @@ clock = pygame.time.Clock()
 def main():
     # initialize game
     circuit_grid = CircuitGrid(5, globals.FIELD_HEIGHT)
-    classical_paddle = paddle.Paddle()
+    classical_paddle = paddle.Paddle(9*globals.WIDTH_UNIT)
+    quantum_paddles = paddle.QuantumPaddles(globals.WINDOW_WIDTH - 9*globals.WIDTH_UNIT) 
     moving_sprites = pygame.sprite.Group()
     moving_sprites.add(classical_paddle)
+    moving_sprites.add(quantum_paddles.paddles)
 
     exit = False
     while not exit:
