@@ -13,7 +13,7 @@ class Ball(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.velocity = [1,2]
         self.initial_speed = 2
-        self.reset(-1)
+        self.reset(1)
 
     def update(self):
         self.rect.x += self.velocity[0]
