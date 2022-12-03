@@ -31,7 +31,7 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 circuit_grid.handle_input(event.key)
 
-        pong_ball.update()
+        pong_ball.update(classical_computer, quantum_computer)
         classical_computer.update(pong_ball)
         quantum_computer.update(pong_ball)
 
@@ -39,6 +39,8 @@ def main():
         screen.fill(globals.BLACK)
         circuit_grid.draw(screen)
         ui.draw_statevector_grid(screen)
+        ui.draw_score(screen, classical_computer.score, quantum_computer.score)
+        ui.draw_dashed_line(screen)
         moving_sprites.draw(screen)
         pygame.display.flip()
 
