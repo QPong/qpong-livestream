@@ -1,3 +1,4 @@
+import pygame
 import qiskit
 
 class Computer:
@@ -17,6 +18,9 @@ class ClassicalComputer(Computer):
             self.paddle.rect.y -= self.speed
         else:
             self.paddle.rect.y += self.speed
+        
+        if pygame.sprite.collide_mask(ball, self.paddle):
+            ball.bounce()
 
 class QuantumComputer(Computer):
     def __init__(self, quantum_paddles, circuit_grid) -> None:
