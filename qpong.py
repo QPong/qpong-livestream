@@ -37,11 +37,17 @@ def main():
 
         # draw game
         screen.fill(globals.BLACK)
-        circuit_grid.draw(screen)
-        ui.draw_statevector_grid(screen)
-        ui.draw_score(screen, classical_computer.score, quantum_computer.score)
-        ui.draw_dashed_line(screen)
-        moving_sprites.draw(screen)
+        if classical_computer.score >= globals.WIN_SCORE:
+            ui.draw_lose_scene(screen)
+        elif quantum_computer.score >= globals.WIN_SCORE:
+            ui.draw_win_scene(screen)
+        else:
+            circuit_grid.draw(screen)
+            ui.draw_statevector_grid(screen)
+            ui.draw_score(screen, classical_computer.score, quantum_computer.score)
+            ui.draw_dashed_line(screen)
+            moving_sprites.draw(screen)
+
         pygame.display.flip()
 
         # control framerate
